@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+    <meta charset="utf-8">
+    <meta name="description" content="Where I explain how I leveraged hugo to finally get into the modern blogging era. ">
+    <link rel="canonical" href="http://example.org/posts/001-building-a-blog-in-2020/" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css" integrity="sha256-aPeK/N8IHpHsvPBCf49iVKMdusfobKo2oxF8lRruWJg=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha256-HkXXtFRaflZ7gjmpjGQBENGnq8NIno4SDNq/3DbkMgo=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>Building a personal dev blog in 2020 | Mauricio R. Cruz</title>
+    <meta property="og:title" content="Building a personal dev blog in 2020" />
+<meta property="og:description" content="Where I explain how I leveraged hugo to finally get into the modern blogging era." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/001-building-a-blog-in-2020/" />
+<meta property="article:published_time" content="2020-06-26T22:26:46-04:00" />
+<meta property="article:modified_time" content="2020-06-26T22:26:46-04:00" />
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Building a personal dev blog in 2020"/>
+<meta name="twitter:description" content="Where I explain how I leveraged hugo to finally get into the modern blogging era."/>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-123-45', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head><body class="bg-color"><header>
+    <nav class="navbar bg-color" role="navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="/" title="home" class="navbar-item">
+                    <span class="logo"><h1>Mauricio R. Cruz</h1></span>
+                </a>
+                
+                <a href="https://github.com/maurcz" class="navbar-item is-hidden-desktop" title="GitHub">
+                    <span class="icon"><i class='fab fa-github'></i></span>
+                </a>
+                
+                <a href="https://www.linkedin.com/in/mauriciorcruz/" class="navbar-item is-hidden-desktop" title="LinkedIn">
+                    <span class="icon"><i class='fab fa-linkedin'></i></span>
+                </a>
+                
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    
+                    <a href="/about" class="navbar-item">About</a>
+                    
+                    <a href="/" class="navbar-item">Posts</a>
+                    
+                </div>
+                <div class="navbar-end">
+                    
+                    <a href="https://github.com/maurcz" class="navbar-item is-hidden-touch" title="GitHub">
+                        <span class="icon"><i class='fab fa-github'></i></span>
+                    </a>
+                    
+                    <a href="https://www.linkedin.com/in/mauriciorcruz/" class="navbar-item is-hidden-touch" title="LinkedIn">
+                        <span class="icon"><i class='fab fa-linkedin'></i></span>
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+    </nav>
+    <script>
+        $(document).ready(function () {
+            $(".navbar-burger").click(function () {
+                $(".navbar-burger").toggleClass("is-active");
+                $(".navbar-menu").toggleClass("is-active");
+            })
+        })
+    </script>
+</header><main>
+<section class="section">
+    <article>
+        <div class="columns is-centered">
+            <div class="column max-1000px">
+                <h2 class="title is-2 highlight-color">Building a personal dev blog in 2020</h2>
+                <p class="subtitle single-subtitle">
+                    <time>June 26, 2020</time> | 4 minutes 
+                </p>
+                <div class="content single-content">
+                    <p>In what now looks like another life, I had a mildly famous tech blog. It all started 10 years (yikes) ago, when I still worked with ABAP. I partnered with a friend to create an ABAP-themed blog called <a href="https://www.abapzombie.com/">ABAPZombie</a>, using <a href="https://wordpress.com/">WordPress</a>. If you think the name is weird, you should take a look at <a href="https://web.archive.org/web/20120202221336/http://www.abapzombie.com/">one of our first page designs</a>.</p>
+<p>SAP is viewed as a tedious platform by most programmers <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> , and back then we believe a lot of this had to deal with how people perceived the information being shared about the ABAP language. Our blog was an attempt to share dev knowledge without coorporate strings attached to the content. And, of course, a platform to vent when we needed.</p>
+<p>Long story short, the site started to get popular, starte to give talks in Brazilian SAP events, and even wrote a book. But since I decided to leave the SAP world for good, I never went back into writing. But this ends today!</p>
+<h2 id="static-site-generators">Static Site Generators</h2>
+<p>I had many issues trying to keep a WordPress website up for over 10 years. Plugins, themes, databases, &ldquo;core&rdquo; updates - you name it. So this time, <a href="https://en.wikipedia.org/wiki/Content_management_system">CMS</a>s were out of question.</p>
+<p>My goal was to create a personal site that could be as simple as possible, so using a static site generator (SSG) was an obvious choice. It&rsquo;s basically a tool that estipulate a certain workflow pattern, which in the end will result in a bunch of generated html/js/css files, ready to be served in the web.</p>
+<p>Three main things drew me towards a SSG over a CMS: markdown, speed and maintainability. Just thinking about all the caching solutions for WordPress gives me the chills. I really like markdown. And with static files, I don&rsquo;t have to care about my website being down just because an syntax-highlight plugin got updated <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p><a href="https://jekyllrb.com/">Jekyll</a> has been around since forever, and was the tool I first intended to use for this website, but influenced by a co-worker I ended up deciding to go with <a href="https://gohugo.io/">Hugo</a>.</p>
+<h2 id="hugo">Hugo</h2>
+<p>I&rsquo;m still amazed by how easy it was to setup everything for this site with Hugo. The <a href="https://gohugo.io/getting-started/quick-start/">quickstart</a> docs are really easy to follow if you&rsquo;re in Linux or OSX (<code>brew install</code> and off you go).</p>
+<p>There are <a href="https://themes.gohugo.io/">plenty of themes</a> available. A piece of advice if your&rsquo;re testing out lots of free themes: some of them require <em>very</em> specific things in your site&rsquo;s <code>config.toml</code> file. Make sure to double check if you&rsquo;re following the theme dev&rsquo;s guidelines for configuration before moving on to a theme &ldquo;that works&rdquo;.</p>
+<p>Most themes I tried still felt like too much for what I wanted, so I decided to go and create my own. <a href="https://www.pakstech.com/blog/create-hugo-theme/">This guide</a> by Janne Kemppainen was really helpful.</p>
+<p>For my custom theme, I decided to take <em>all</em> the clutter out of the way. Only two folders live inside <code>content</code>:</p>
+<pre><code>&gt; about
+  - index.md
+&gt; posts
+  - 001-....md
+  - 002-....md
+</code></pre><p>The numbers in front of the posts are not a theme hard requirement, just something I decided to use to keep things organized. Plus, I can semantically tie images to posts, like <code>/images/001/whatever.png</code>.</p>
+<p>My <code>index.html</code> is basically the list of posts + a simpler version of the <code>pagination</code> widget from Janne&rsquo;s post:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ $pag := $.Paginator }}
+{{ if gt $pag.TotalPages 1 }}
+&lt;<span style="color:#f92672">nav</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination is-small is-rounded&#34;</span>&gt;
+&lt;<span style="color:#f92672">ul</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-list&#34;</span>&gt;
+    {{ with $pag.First }}
+    &lt;<span style="color:#f92672">li</span>&gt;
+        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .URL }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasPrev</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;First&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;laquo;&amp;laquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
+    &lt;/<span style="color:#f92672">li</span>&gt;
+    {{ end }}
+    &lt;<span style="color:#f92672">li</span>&gt;
+        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ if $pag.HasPrev }}{{ $pag.Prev.URL }}{{ end }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasPrev</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Previous&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;laquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
+    &lt;/<span style="color:#f92672">li</span>&gt;
+    
+    {{ range $pag.Pagers }}
+    {{ end }}
+    &lt;<span style="color:#f92672">li</span>&gt;
+    &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ if $pag.HasNext }}{{ $pag.Next.URL }}{{ end }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasNext</span> <span style="color:#960050;background-color:#1e0010">}}</span><span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Next&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;raquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
+    &lt;/<span style="color:#f92672">li</span>&gt;
+    {{ with $pag.Last }}
+    &lt;<span style="color:#f92672">li</span>&gt;
+        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .URL }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasNext</span> <span style="color:#960050;background-color:#1e0010">}}</span><span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Last&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;raquo;&amp;raquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
+    &lt;/<span style="color:#f92672">li</span>&gt;
+    {{ end }}
+&lt;/<span style="color:#f92672">ul</span>&gt;
+&lt;/<span style="color:#f92672">nav</span>&gt;
+{{ end }}
+</code></pre></div><p>That code will render:</p>
+<p><img src="/images/001/pagination.png" alt="pagination"></p>
+<p>In my version, there are no numbers for pages, just simple controls to skip to next/prev or first/last. The new CSS classes come straight from <a href="https://bulma.io/">Bulma</a> (also recommended by Janne). Think of it as a lighter version of Bootstrap, kinda like what <a href="https://purecss.io/">PureCSS</a> does. I&rsquo;m not well versed on all the hidden mysteries of CSS, so any open source CSS framework that&rsquo;s modular and simple to use works for me.</p>
+<p>I&rsquo;ve added <a href="https://fontawesome.com/icons?d=gallery&amp;m=free">fontawesome</a> to the theme, which is where those social icons up there are coming from, and the free font <a href="https://fonts.google.com/specimen/Merriweather">Merriweather</a> by Google. Aside from some minor CSS tweaks and overrides, that&rsquo;s pretty much it.</p>
+<p>All that was left was to host the site somewhere.</p>
+<h2 id="github-pages">Github Pages</h2>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>I have no data to back up this claim, but I encourage you to try and ask any non-SAP dev you know that had to touch anything ABAP-related. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>This happened to me once. And again with other plugins. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+                </div>          
+                <div class="divider"></div>
+                <div class="columns is-vcentered">
+                    <div class="column related-posts">
+                        <h1 class="title is-5">Related Posts</h1>
+                        
+                        
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="columns is-vcentered">
+                    <div class="column categories">
+                        <h2 class="title is-5">Categories</h2>
+                        
+                        <a href="/categories/web-development">Web Development</a>, 
+                        <a href="/categories/blogging">Blogging</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </article>
+</section>
+
+        </main><footer class="footer bg-color">
+    <div class="container">
+        <div class="columns has-text-centered">            
+            <div class="column is-narrow">
+                <i class='fa fa-coffee' aria-hidden='true'></i> Made with <a target='_blank' href='https://gohugo.io/'>hugo</a>. Custom theme based on <a target='_blank' href='https://www.pakstech.com/blog/create-hugo-theme/'>this</a> blog post.
+            </div>            
+        </div>
+    </div>
+</footer></body>
+</html>

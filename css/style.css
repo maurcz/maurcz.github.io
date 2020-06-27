@@ -1,0 +1,83 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;    
+    font-family: 'Merriweather', serif;
+}
+
+main {
+    flex: 1;
+}
+
+a {
+    color: #d91717e8;
+}
+
+hr {
+	background-color: #ccc;
+	height: 1px;
+}
+
+.highlight-color {
+    color: #d91717e8
+}
+
+.bg-color {
+    background-color: #fdfaf5;
+}
+
+.footnotes {
+    font-size: 12px
+}
+
+.footer {
+    padding: 1rem 1.5rem 1rem;
+    font-size: 12px;
+}
+
+.logo h1 {
+    font-size: 1.5em;
+
+}
+.max-1000px {
+    max-width: 1000px;
+}
+.author-image {
+    object-fit: cover;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+}
+
+.summary {
+    font-size: 15px;
+    padding: 1em 0 1.5em 0;
+}
+
+.single-subtitle {
+    padding: 0.2em 0.5em;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.single-content {
+    padding-top: 1.4em;
+}
+
+.divider {
+    border-top: 1px solid #acacac;
+    margin: 3em 0 2em 0;
+}
+
+.related-posts > li {
+    margin-left: 2em;
+    padding-left: 0.3em;
+}
+
+.navbar-link.is-active, .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, a.navbar-item.is-active, a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, .pagination-link:focus, .pagination-next:focus, .pagination-previous:focus, .pagination-link:hover, .pagination-next:hover, .pagination-previous:hover {
+	color: #d91717e8
+}
+
+.pagination-link:focus, .pagination-next:focus, .pagination-previous:focus {
+	border-color: #d91717e8;
+}
