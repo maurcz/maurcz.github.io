@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us"><head>
     <meta charset="utf-8">
-    <meta name="description" content="Where I explain how I leveraged hugo to finally get into the modern blogging era. ">
+    <meta name="description" content="Where I explain how I leveraged Hugo to finally get into the modern era of blogging. ">
     <link rel="canonical" href="https://maurcz.github.io/posts/001-building-a-blog-in-2020/" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css" integrity="sha256-aPeK/N8IHpHsvPBCf49iVKMdusfobKo2oxF8lRruWJg=" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha256-HkXXtFRaflZ7gjmpjGQBENGnq8NIno4SDNq/3DbkMgo=" crossorigin="anonymous"></script>
@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/css/style.css" />
     <title>Building a personal dev blog in 2020 | Mauricio R. Cruz</title>
     <meta property="og:title" content="Building a personal dev blog in 2020" />
-<meta property="og:description" content="Where I explain how I leveraged hugo to finally get into the modern blogging era." />
+<meta property="og:description" content="Where I explain how I leveraged Hugo to finally get into the modern era of blogging." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://maurcz.github.io/posts/001-building-a-blog-in-2020/" />
 <meta property="article:published_time" content="2020-06-26T22:26:46-04:00" />
@@ -17,7 +17,7 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Building a personal dev blog in 2020"/>
-<meta name="twitter:description" content="Where I explain how I leveraged hugo to finally get into the modern blogging era."/>
+<meta name="twitter:description" content="Where I explain how I leveraged Hugo to finally get into the modern era of blogging."/>
 
     
 <script type="application/javascript">
@@ -37,6 +37,10 @@ if (!doNotTrack) {
             <div class="navbar-brand">
                 <a href="/" title="home" class="navbar-item">
                     <span class="logo"><h1>Mauricio R. Cruz</h1></span>
+                </a>
+                
+                <a href="mailto:mauriciorcruz@gmail.com" class="navbar-item is-hidden-desktop" title="Email">
+                    <span class="icon"><i class='fa fa-envelope'></i></span>
                 </a>
                 
                 <a href="https://github.com/maurcz" class="navbar-item is-hidden-desktop" title="GitHub">
@@ -62,6 +66,10 @@ if (!doNotTrack) {
                     
                 </div>
                 <div class="navbar-end">
+                    
+                    <a href="mailto:mauriciorcruz@gmail.com" class="navbar-item is-hidden-touch" title="Email">
+                        <span class="icon"><i class='fa fa-envelope'></i></span>
+                    </a>
                     
                     <a href="https://github.com/maurcz" class="navbar-item is-hidden-touch" title="GitHub">
                         <span class="icon"><i class='fab fa-github'></i></span>
@@ -90,22 +98,22 @@ if (!doNotTrack) {
             <div class="column max-1000px">
                 <h2 class="title is-2 highlight-color">Building a personal dev blog in 2020</h2>
                 <p class="subtitle single-subtitle">
-                    <time>June 26, 2020</time> | 4 minutes 
+                    <time>June 26, 2020</time> | 6 minutes 
                 </p>
                 <div class="content single-content">
                     <p>In what now looks like another life, I had a mildly famous tech blog. It all started 10 years (yikes) ago, when I still worked with ABAP. I partnered with a friend to create an ABAP-themed blog called <a href="https://www.abapzombie.com/">ABAPZombie</a>, using <a href="https://wordpress.com/">WordPress</a>. If you think the name is weird, you should take a look at <a href="https://web.archive.org/web/20120202221336/http://www.abapzombie.com/">one of our first page designs</a>.</p>
-<p>SAP is viewed as a tedious platform by most programmers <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> , and back then we believe a lot of this had to deal with how people perceived the information being shared about the ABAP language. Our blog was an attempt to share dev knowledge without coorporate strings attached to the content. And, of course, a platform to vent when we needed.</p>
-<p>Long story short, the site started to get popular, starte to give talks in Brazilian SAP events, and even wrote a book. But since I decided to leave the SAP world for good, I never went back into writing. But this ends today!</p>
+<p>SAP is viewed as a tedious platform by most programmers <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> , and back then we believed a lot of this had to deal with how people perceived the format of the information being shared about the ABAP language. Our blog was an attempt to share dev knowledge without corporate strings attached to the content. And, of course, a platform to vent when needed.</p>
+<p>Long story short, the site started to get popular, I gave talks in Brazilian SAP events, and even wrote a book. But since I decided to leave the SAP world for good, due to many different reasons I never went back into writing. But this ends today!</p>
 <h2 id="static-site-generators">Static Site Generators</h2>
 <p>I had many issues trying to keep a WordPress website up for over 10 years. Plugins, themes, databases, &ldquo;core&rdquo; updates - you name it. So this time, <a href="https://en.wikipedia.org/wiki/Content_management_system">CMS</a>s were out of question.</p>
 <p>My goal was to create a personal site that could be as simple as possible, so using a static site generator (SSG) was an obvious choice. It&rsquo;s basically a tool that estipulate a certain workflow pattern, which in the end will result in a bunch of generated html/js/css files, ready to be served in the web.</p>
-<p>Three main things drew me towards a SSG over a CMS: markdown, speed and maintainability. Just thinking about all the caching solutions for WordPress gives me the chills. I really like markdown. And with static files, I don&rsquo;t have to care about my website being down just because an syntax-highlight plugin got updated <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
-<p><a href="https://jekyllrb.com/">Jekyll</a> has been around since forever, and was the tool I first intended to use for this website, but influenced by a co-worker I ended up deciding to go with <a href="https://gohugo.io/">Hugo</a>.</p>
+<p>Three main things drew me towards a SSG over a CMS: markdown, speed and maintainability. Just thinking about all the caching solutions for WordPress gives me the chills. I really like markdown. And with static files, I don&rsquo;t have to care about my website being down just because a syntax-highlight plugin got updated <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p><a href="https://jekyllrb.com/">Jekyll</a> has been around since forever, and was the tool I first intended to use for this website. But influenced by a co-worker of mine, I ended up deciding to go with <a href="https://goHugo.io/">Hugo</a>.</p>
 <h2 id="hugo">Hugo</h2>
-<p>I&rsquo;m still amazed by how easy it was to setup everything for this site with Hugo. The <a href="https://gohugo.io/getting-started/quick-start/">quickstart</a> docs are really easy to follow if you&rsquo;re in Linux or OSX (<code>brew install</code> and off you go).</p>
-<p>There are <a href="https://themes.gohugo.io/">plenty of themes</a> available. A piece of advice if your&rsquo;re testing out lots of free themes: some of them require <em>very</em> specific things in your site&rsquo;s <code>config.toml</code> file. Make sure to double check if you&rsquo;re following the theme dev&rsquo;s guidelines for configuration before moving on to a theme &ldquo;that works&rdquo;.</p>
-<p>Most themes I tried still felt like too much for what I wanted, so I decided to go and create my own. <a href="https://www.pakstech.com/blog/create-hugo-theme/">This guide</a> by Janne Kemppainen was really helpful.</p>
-<p>For my custom theme, I decided to take <em>all</em> the clutter out of the way. Only two folders live inside <code>content</code>:</p>
+<p>I&rsquo;m still amazed by how easy it was to setup everything for this site with Hugo. The <a href="https://goHugo.io/getting-started/quick-start/">quickstart</a> docs are really easy to follow if you&rsquo;re in Linux or OSX (<code>brew install</code> and off you go).</p>
+<p>There are <a href="https://themes.goHugo.io/">plenty of themes</a> available. A piece of advice if you&rsquo;re testing out lots of free themes: some of them require <em>very</em> specific things in your site&rsquo;s <code>config.toml</code> file. Make sure to double check if you&rsquo;re following the theme dev&rsquo;s guidelines for configuration, before moving on to a theme &ldquo;that works&rdquo;.</p>
+<p>Most themes I tried still felt like too much for what I wanted, so I decided to go and create my own. <a href="https://www.pakstech.com/blog/create-Hugo-theme/">This guide</a> by Janne Kemppainen was extremely helpful. Basically, I used his examples as a bad, but took <em>all</em> the &ldquo;clutter&rdquo; out of the way.</p>
+<p>Only two folders live inside <code>content</code>:</p>
 <pre><code>&gt; about
   - index.md
 &gt; posts
@@ -142,10 +150,52 @@ if (!doNotTrack) {
 </code></pre></div><p>That code will render:</p>
 <p><img src="/images/001/pagination.png" alt="pagination"></p>
 <p>In my version, there are no numbers for pages, just simple controls to skip to next/prev or first/last. The new CSS classes come straight from <a href="https://bulma.io/">Bulma</a> (also recommended by Janne). Think of it as a lighter version of Bootstrap, kinda like what <a href="https://purecss.io/">PureCSS</a> does. I&rsquo;m not well versed on all the hidden mysteries of CSS, so any open source CSS framework that&rsquo;s modular and simple to use works for me.</p>
+<p>Here&rsquo;s my override to <code>theme/folder/index.html</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ define &#34;main&#34; }}
+&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;section&#34;</span>&gt;
+        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
+            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-1000px&#34;</span>&gt;
+                &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;content&#34;</span>&gt;
+                    {{ .Content }}
+                    {{ $paginator := .Paginate (where site.RegularPages &#34;Type&#34; &#34;in&#34; site.Params.mainSections) }}
+                    {{ range .Paginator.Pages }}
+                    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;title is-5&#34;</span>&gt;
+                            &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .Permalink }}&#34;</span>&gt;{{ .Title }}&lt;/<span style="color:#f92672">a</span>&gt;
+                        &lt;/<span style="color:#f92672">div</span>&gt;
+                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;subtitle is-7&#34;</span>&gt;
+                            &lt;<span style="color:#f92672">time</span>&gt;{{ .PublishDate.Format &#34;January 2, 2006&#34;}}&lt;/<span style="color:#f92672">time</span>&gt;
+                            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;summary&#34;</span>&gt;
+                            {{ .Summary }}
+                            &lt;/<span style="color:#f92672">div</span>&gt;
+                        &lt;/<span style="color:#f92672">div</span>&gt;
+                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;subtitle&#34;</span>&gt;
+                        &lt;/<span style="color:#f92672">div</span>&gt;
+                    &lt;/<span style="color:#f92672">div</span>&gt;
+                    {{ end }}
+                &lt;/<span style="color:#f92672">div</span>&gt;
+            &lt;/<span style="color:#f92672">div</span>&gt;
+        &lt;/<span style="color:#f92672">div</span>&gt;
+        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
+            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-1000px&#34;</span>&gt;
+                {{ partial &#34;widgets/pagination.html&#34; . }}
+            &lt;/<span style="color:#f92672">div</span>&gt;
+        &lt;/<span style="color:#f92672">div</span>&gt;
+    &lt;/<span style="color:#f92672">div</span>&gt;    
+&lt;/<span style="color:#f92672">div</span>&gt;
+{{ end }}
+</code></pre></div><p>Just a simple list of <em>posts</em> (notice the rules for <code>$paginator</code>), with title, date and summary. Bulma&rsquo;s <a href="https://bulma.io/documentation/columns/basics/">column</a> ensure a modular and responsive layout, giving me that feeling that I&rsquo;m back into using <code>&lt;tr&gt;&lt;td&gt;</code>s for everything in Dreamweaver (I really wished I had a way to find the first ever Quake website I made).</p>
 <p>I&rsquo;ve added <a href="https://fontawesome.com/icons?d=gallery&amp;m=free">fontawesome</a> to the theme, which is where those social icons up there are coming from, and the free font <a href="https://fonts.google.com/specimen/Merriweather">Merriweather</a> by Google. Aside from some minor CSS tweaks and overrides, that&rsquo;s pretty much it.</p>
 <p>All that was left was to host the site somewhere.</p>
 <h2 id="github-pages">Github Pages</h2>
-<p>Testing!</p>
+<p>The idea of publishing my site as a public github repo always appealed to me, so I decided to give it a go. Again, the <a href="https://goHugo.io/hosting-and-deployment/">Hugo docs</a> are of great use when it comes to hosting/deployment. The only small change I made to the instruction was using <code>ssh</code> over <code>https</code> for my <code>submodule</code>, with pub/priv keys for authentication.</p>
+<p>One thing I&rsquo;ll say thought, is that when I first publish the <code>public</code> folder to the new github repo, all I got was a huge 404 error. Googling led me to think there might be some problem with the files generated by Hugo, since Github&rsquo;s SSG of choice is, obviously, <a href="https://help.github.com/en/github/working-with-github-pages/about-github-pages#static-site-generators">Jekyll</a> (it was created by one of Github&rsquo;s <a href="https://en.wikipedia.org/wiki/Jekyll_(software)">co-founders</a>). I even thought about hosting Hugo in GitLab, which natively supports Hugo, Jekyll and others&hellip; but all it took was a few minutes for my site to pop up correctly. A little bit more patience was all I needed.</p>
+<p>Another small thing I forgot to do was fixing the <code>baseURL</code> in my site&rsquo;s <code>config.toml</code>. That&rsquo;s what Hugo uses to prefix all relative links when the <code>public</code> files get generated.</p>
+<p>I&rsquo;ll probably add a custom domain to my site&rsquo;s repo at some point, since I don&rsquo;t like <code>github.io</code> that much. You can do that <a href="https://help.github.com/en/github/working-with-github-pages/configuring-a-custom-domain-for-your-github-pages-site">directly inside github</a>, which is pretty convenient.</p>
+<h2 id="what-now">What now?</h2>
+<p>Well, I guess now I&rsquo;m finally back into writing. It&rsquo;s been a while (last time I wrote for a blog <a href="https://www.abapzombie.com/mundo-sap/2017/05/31/exite-vida-apos-o-abap/">was in 2017</a>), and I definitely missed it. Hopefully this will serve as a platform to improve not only my tech, but also english writing skills.</p>
+<p>Thanks for reading, and I see you in the next one!</p>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
