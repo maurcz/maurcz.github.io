@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Mauricio R. Cruz</title>
-    <link>http://example.org/categories/</link>
+    <link>https://maurcz.github.io/categories/</link>
     <description>Recent content in Categories on Mauricio R. Cruz</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 26 Jun 2020 22:26:46 -0400</lastBuildDate>
     
-	<atom:link href="http://example.org/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://maurcz.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Blogging</title>
-      <link>http://example.org/categories/blogging/</link>
+      <link>https://maurcz.github.io/categories/blogging/</link>
       <pubDate>Fri, 26 Jun 2020 22:26:46 -0400</pubDate>
       
-      <guid>http://example.org/categories/blogging/</guid>
+      <guid>https://maurcz.github.io/categories/blogging/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Web Development</title>
-      <link>http://example.org/categories/web-development/</link>
+      <link>https://maurcz.github.io/categories/web-development/</link>
       <pubDate>Fri, 26 Jun 2020 22:26:46 -0400</pubDate>
       
-      <guid>http://example.org/categories/web-development/</guid>
+      <guid>https://maurcz.github.io/categories/web-development/</guid>
       <description></description>
     </item>
     
