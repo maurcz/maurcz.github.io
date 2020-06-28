@@ -5,6 +5,7 @@
     <link rel="canonical" href="https://maurcz.github.io/posts/001-building-a-blog-in-2020/" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css" integrity="sha256-aPeK/N8IHpHsvPBCf49iVKMdusfobKo2oxF8lRruWJg=" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha256-HkXXtFRaflZ7gjmpjGQBENGnq8NIno4SDNq/3DbkMgo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="/css/style.css" />
     <title>Building a personal dev blog in 2020 | Mauricio R. Cruz</title>
@@ -90,12 +91,12 @@ if (!doNotTrack) {
                 $(".navbar-menu").toggleClass("is-active");
             })
         })
-    </script>
+    </script>    
 </header><main>
 <section class="section">
     <article>
         <div class="columns is-centered">
-            <div class="column max-1000px">
+            <div class="column max-width">
                 <h2 class="title is-2 highlight-color">Building a personal dev blog in 2020</h2>
                 <p class="subtitle single-subtitle">
                     <time>June 26, 2020</time> | 6 minutes 
@@ -112,7 +113,7 @@ if (!doNotTrack) {
 <h2 id="hugo">Hugo</h2>
 <p>I&rsquo;m still amazed by how easy it was to setup everything for this site with Hugo. The <a href="https://goHugo.io/getting-started/quick-start/">quickstart</a> docs are really easy to follow if you&rsquo;re in Linux or OSX (<code>brew install</code> and off you go).</p>
 <p>There are <a href="https://themes.goHugo.io/">plenty of themes</a> available. A piece of advice if you&rsquo;re testing out lots of free themes: some of them require <em>very</em> specific things in your site&rsquo;s <code>config.toml</code> file. Make sure to double check if you&rsquo;re following the theme dev&rsquo;s guidelines for configuration, before moving on to a theme &ldquo;that works&rdquo;.</p>
-<p>Most themes I tried still felt like too much for what I wanted, so I decided to go and create my own. <a href="https://www.pakstech.com/blog/create-Hugo-theme/">This guide</a> by Janne Kemppainen was extremely helpful. Basically, I used his examples as a bad, but took <em>all</em> the &ldquo;clutter&rdquo; out of the way.</p>
+<p>Most themes I tried still felt like too much for what I wanted, so I decided to go and create my own. <a href="https://www.pakstech.com/blog/create-Hugo-theme/">This guide</a> by Janne Kemppainen was extremely helpful. Basically, I used his examples as base taking <em>all</em> the &ldquo;clutter&rdquo; out of the way.</p>
 <p>Only two folders live inside <code>content</code>:</p>
 <pre><code>&gt; about
   - index.md
@@ -155,7 +156,7 @@ if (!doNotTrack) {
 &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
     &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;section&#34;</span>&gt;
         &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
-            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-1000px&#34;</span>&gt;
+            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-width&#34;</span>&gt;
                 &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;content&#34;</span>&gt;
                     {{ .Content }}
                     {{ $paginator := .Paginate (where site.RegularPages &#34;Type&#34; &#34;in&#34; site.Params.mainSections) }}
@@ -178,7 +179,7 @@ if (!doNotTrack) {
             &lt;/<span style="color:#f92672">div</span>&gt;
         &lt;/<span style="color:#f92672">div</span>&gt;
         &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
-            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-1000px&#34;</span>&gt;
+            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-width&#34;</span>&gt;
                 {{ partial &#34;widgets/pagination.html&#34; . }}
             &lt;/<span style="color:#f92672">div</span>&gt;
         &lt;/<span style="color:#f92672">div</span>&gt;
@@ -186,7 +187,7 @@ if (!doNotTrack) {
 &lt;/<span style="color:#f92672">div</span>&gt;
 {{ end }}
 </code></pre></div><p>Just a simple list of <em>posts</em> (notice the rules for <code>$paginator</code>), with title, date and summary. Bulma&rsquo;s <a href="https://bulma.io/documentation/columns/basics/">column</a> ensure a modular and responsive layout, giving me that feeling that I&rsquo;m back into using <code>&lt;tr&gt;&lt;td&gt;</code>s for everything in Dreamweaver (I really wished I had a way to find the first ever Quake website I made).</p>
-<p>I&rsquo;ve added <a href="https://fontawesome.com/icons?d=gallery&amp;m=free">fontawesome</a> to the theme, which is where those social icons up there are coming from, and the free font <a href="https://fonts.google.com/specimen/Merriweather">Merriweather</a> by Google. Aside from some minor CSS tweaks and overrides, that&rsquo;s pretty much it.</p>
+<p>I&rsquo;ve added <a href="https://fontawesome.com/icons?d=gallery&amp;m=free">fontawesome</a> to the theme, which is where those social icons up there are coming from, and the free font <a href="https://fonts.google.com/specimen/Merriweather">Merriweather</a> by Google. <a href="https://jquery.com/">JQuery</a> is only used to deal with the &ldquo;burguer&rdquo; icon that appears when you access the website using smaller screens. Aside from some minor CSS tweaks and overrides, that&rsquo;s pretty much it.</p>
 <p>All that was left was to host the site somewhere.</p>
 <h2 id="github-pages">Github Pages</h2>
 <p>The idea of publishing my site as a public github repo always appealed to me, so I decided to give it a go. Again, the <a href="https://goHugo.io/hosting-and-deployment/">Hugo docs</a> are of great use when it comes to hosting/deployment. The only small change I made to the instruction was using <code>ssh</code> over <code>https</code> for my <code>submodule</code>, with pub/priv keys for authentication.</p>

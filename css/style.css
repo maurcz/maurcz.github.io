@@ -39,9 +39,11 @@ hr {
     font-size: 1.5em;
 
 }
-.max-1000px {
+
+.max-width {
     max-width: 1000px;
 }
+
 .author-image {
     object-fit: cover;
     border-radius: 50%;
@@ -81,3 +83,43 @@ hr {
 .pagination-link:focus, .pagination-next:focus, .pagination-previous:focus {
 	border-color: #d91717e8;
 }
+
+/* Mobile */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2) { 
+
+    .logo h1,
+    .navbar-item{
+        font-size: 1.4em;
+    }
+
+    .title.is-5 {
+        font-size: 36px !important;
+    }
+
+    .subtitle.is-7,
+    .single-subtitle {
+        font-size:22px !important;
+    }
+
+    .summary {
+        font-size: 26px !important;
+    }
+    
+    footer {
+        font-size: 22px !important;
+    }
+    
+    section p {
+        font-size: 26px !important;
+    }    
+}
+
+@media only screen 
+  and (max-device-width: 980px) {
+      .max-width{
+          max-width: 95%;
+      }
+  } 
