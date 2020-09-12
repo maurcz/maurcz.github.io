@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-us"><head>
+<html lang="en-us" class="bg-color"><head>
     <meta charset="utf-8">
     <meta name="description" content="Where I explain how I leveraged Hugo to finally get into the modern era of blogging. ">
     <link rel="canonical" href="https://maurcz.github.io/posts/001-building-a-blog-in-2020/" />
@@ -32,7 +32,7 @@ if (!doNotTrack) {
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
 
-</head><body class="bg-color"><header>
+</head><body class="flex-box-align-center"><header class="flex-item-width">
     <nav class="navbar bg-color" role="navigation">
         <div class="container">
             <div class="navbar-brand">
@@ -92,11 +92,11 @@ if (!doNotTrack) {
             })
         })
     </script>    
-</header><main>
+</header><main class="flex-item-width">
 <section class="section">
     <article>
         <div class="columns is-centered">
-            <div class="column max-width">
+            <div class="column max-content-width">
                 <h2 class="title is-2 highlight-color">Building a personal dev blog in 2020</h2>
                 <p class="subtitle single-subtitle">
                     <time>June 26, 2020</time> | 6 minutes 
@@ -156,7 +156,7 @@ if (!doNotTrack) {
 &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
     &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;section&#34;</span>&gt;
         &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
-            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-width&#34;</span>&gt;
+            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-content-width&#34;</span>&gt;
                 &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;content&#34;</span>&gt;
                     {{ .Content }}
                     {{ $paginator := .Paginate (where site.RegularPages &#34;Type&#34; &#34;in&#34; site.Params.mainSections) }}
@@ -179,7 +179,7 @@ if (!doNotTrack) {
             &lt;/<span style="color:#f92672">div</span>&gt;
         &lt;/<span style="color:#f92672">div</span>&gt;
         &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
-            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-width&#34;</span>&gt;
+            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-content-width&#34;</span>&gt;
                 {{ partial &#34;widgets/pagination.html&#34; . }}
             &lt;/<span style="color:#f92672">div</span>&gt;
         &lt;/<span style="color:#f92672">div</span>&gt;
@@ -233,7 +233,7 @@ if (!doNotTrack) {
     </article>
 </section>
 
-        </main><footer class="footer bg-color">
+        </main><footer class="footer bg-color flex-item-width">
     <div class="container">
         <div class="columns has-text-centered">            
             <div class="column is-narrow">
