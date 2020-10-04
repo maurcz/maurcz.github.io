@@ -3,7 +3,87 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://maurcz.github.io/categories/blogging/</loc>
+    <loc>https://maurcz.github.io/categories/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/custom/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/posts/002-customizing-the-python-debugger/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/debug/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/debugger/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/debugging/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/memory/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/pdb/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/posts/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/pympler/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/categories/python/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/python/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/categories/technical/</loc>
+    <lastmod>2020-10-03T21:04:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/blog/</loc>
+    <lastmod>2020-06-26T22:26:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://maurcz.github.io/tags/building/</loc>
     <lastmod>2020-06-26T22:26:46-04:00</lastmod>
   </url>
   
@@ -13,17 +93,17 @@
   </url>
   
   <url>
-    <loc>https://maurcz.github.io/categories/</loc>
+    <loc>https://maurcz.github.io/tags/hugo/</loc>
     <lastmod>2020-06-26T22:26:46-04:00</lastmod>
   </url>
   
   <url>
-    <loc>https://maurcz.github.io/</loc>
+    <loc>https://maurcz.github.io/tags/scratch/</loc>
     <lastmod>2020-06-26T22:26:46-04:00</lastmod>
   </url>
   
   <url>
-    <loc>https://maurcz.github.io/posts/</loc>
+    <loc>https://maurcz.github.io/tags/theme/</loc>
     <lastmod>2020-06-26T22:26:46-04:00</lastmod>
   </url>
   
@@ -35,10 +115,6 @@
   <url>
     <loc>https://maurcz.github.io/about/</loc>
     <lastmod>2020-06-24T20:14:50-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://maurcz.github.io/tags/</loc>
   </url>
   
 </urlset>

@@ -6,17 +6,26 @@
     <description>Recent content in Categories on Mauricio R. Cruz</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 26 Jun 2020 22:26:46 -0400</lastBuildDate>
+    <lastBuildDate>Sat, 03 Oct 2020 21:04:28 -0400</lastBuildDate>
     
 	<atom:link href="https://maurcz.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Blogging</title>
-      <link>https://maurcz.github.io/categories/blogging/</link>
-      <pubDate>Fri, 26 Jun 2020 22:26:46 -0400</pubDate>
+      <title>Python</title>
+      <link>https://maurcz.github.io/categories/python/</link>
+      <pubDate>Sat, 03 Oct 2020 21:04:28 -0400</pubDate>
       
-      <guid>https://maurcz.github.io/categories/blogging/</guid>
+      <guid>https://maurcz.github.io/categories/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Technical</title>
+      <link>https://maurcz.github.io/categories/technical/</link>
+      <pubDate>Sat, 03 Oct 2020 21:04:28 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/categories/technical/</guid>
       <description></description>
     </item>
     
