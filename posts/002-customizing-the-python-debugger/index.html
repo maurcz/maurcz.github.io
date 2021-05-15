@@ -12,9 +12,10 @@
     <meta property="og:title" content="Customizing the Python Debugger" />
 <meta property="og:description" content="Creating custom commands for the Python Debugger (pdb)." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://maurcz.github.io/posts/002-customizing-the-python-debugger/" />
+<meta property="og:url" content="https://maurcz.github.io/posts/002-customizing-the-python-debugger/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-10-03T21:04:28-04:00" />
 <meta property="article:modified_time" content="2020-10-03T21:04:28-04:00" />
+
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Customizing the Python Debugger"/>
@@ -102,20 +103,20 @@ if (!doNotTrack) {
                     <time>October 3, 2020</time> | 9 minutes 
                 </p>
                 <div class="content single-content">
-                    <p>I&rsquo;ve used several IDEs over the years (Visual Studio, Eclipse, MonoDevelop, XCode - even though I kinda regret that last one), but when I started working with Python, I made the decision to use VSCode only as a text editor on steroids, doing everything else inside the terminal. That means I never use VSCode&rsquo;s python debugger, using pdb-ish packages like <a href="https://github.com/pdbpp/pdbpp">pdbpp</a> instead.</p>
-<p>However, I&rsquo;ve always wondered exactly they work, as normally those tools retain all of the original pdb functionalities while enhancing the experience with all sorts of cool stuff. I did some digging, and in this post I&rsquo;ll explain how to create a tiny pdb-ish implementation, adding a simple command to print how much memory is being used by the args of the current function.</p>
+                    <p>I&rsquo;ve used several IDEs over the years (Visual Studio, Eclipse, MonoDevelop, XCode - I kinda regret that last one), but when I started working with Python, I made the decision to use VSCode only as a text editor on steroids, doing everything else inside the terminal. That means I never use VSCode&rsquo;s python debugger, preferring  pdb-ish packages like <a href="https://github.com/pdbpp/pdbpp">pdbpp</a>.</p>
+<p>However, I&rsquo;ve always wondered exactly how they work, as normally those tools retain all of the original <code>pdb</code> functionalities while enhancing the experience with all sorts of cool stuff. I did some digging and in this post I&rsquo;ll explain how to create a tiny pdb-ish implementation, adding a simple command to print how much memory is being used by the args of the current function.</p>
 <p><em>All source code created for this post can be found <a href="https://github.com/maurcz/posts/tree/main/python-customizing-pdb">here</a>.</em></p>
 <h2 id="basics">Basics</h2>
-<p>One of the most basic things a young python developer will learn is how to put a breakpoint in the source code. For python &lt; 3.7, the most common way to do this is with <code>import pdb; pdb.set_trace</code>. This will import the standard <code>pdb</code> module and call function <code>set_trace()</code>, which will throw you into python&rsquo;s debugger as soon as you code hits that line. If you decide to use an alternative debugger like <code>pudb</code> or <code>ipdb</code>, you&rsquo;ll have to adjust that command slightly, since the module/function you&rsquo;ll import will probably be different (e.g. <code>import ipdb; ipdb.set_trace()</code>).</p>
-<p>Luckily, versions &gt;= 3.7 can start using the <code>breakpoint()</code> built-in function, which has support for non-standard debugging tools as described in <a href="https://www.python.org/dev/peps/pep-0553/">PEP 553</a>. This means it&rsquo;s possible to control <code>breakpoint()</code>'s behavior via environment variables, instead of having to use a completely different command in case you decide to switch debuggers. I won&rsquo;t use <code>breakpoint()</code> in this post to simplify the explanation (I haven&rsquo;t yet seen much people using this in the wild), but everything in here supports <code>breakpoint()</code> as long as the env var is correctly set up.</p>
-<p>Going back to <code>pdb</code>, turns out <code>set_trace</code> is just a simplified interface for the <code>Pdb</code> class, as we can see in <code>pdb</code>'s <a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1609">source code</a>. The <a href="https://docs.python.org/3/library/pdb.html">docs</a> will also state that all <code>pdb</code> functionality is defined inside the <code>Pdb</code> class, making the code extensible by nature.</p>
-<p>What&rsquo;s interesting about the <code>Pdb</code> class is that it implements two other classes <code>Bdb</code> and <code>Cmd</code> (as if we didn&rsquo;t already have enough acronyms). <a href="https://docs.python.org/3/library/bdb.html#module-bdb">Bdb</a> is python&rsquo;s debugger framework, which provides basic capabilities like setting breakpoints; <a href="https://docs.python.org/3/library/cmd.html#module-cmd">Cmd</a> is a framework for writing line-oriented command interpreters. This means you don&rsquo;t necessarily need to inherit from <code>Pdb</code> if you want to create your custom debugger - you can do all the heavy lifting yourself using <code>bdb</code> and <code>cmd</code>. This is not the aim of this post though, we&rsquo;ll just extend <code>pdb</code>'s functionalities into our own tiny custom debugger module.</p>
+<p>One of the most basic things a young python developer will learn is how to put a breakpoint in the source code. For python &lt; 3.7, the most common way to do this is with <code>import pdb; pdb.set_trace</code>. Those commands will import the standard <code>pdb</code> module and call function <code>set_trace()</code>, which will throw you into python&rsquo;s debugger as soon as you code hits that line. If you decide to use an alternative debugger like <code>pudb</code> or <code>ipdb</code>, you&rsquo;ll have to adjust that command slightly, since the module/function you&rsquo;ll import will probably be different (e.g. <code>import ipdb; ipdb.set_trace()</code>).</p>
+<p>Luckily, versions &gt;= 3.7 provide the <code>breakpoint()</code> built-in function, which has support for non-standard debugging tools as described in <a href="https://www.python.org/dev/peps/pep-0553/">PEP 553</a>. This means it&rsquo;s possible to control <code>breakpoint()</code>&rsquo;s behavior via environment variables, instead of having to use a completely different command in case you decide to switch debuggers. I won&rsquo;t use <code>breakpoint()</code> in this post to simplify the explanation (I haven&rsquo;t yet seen much people using this in the wild), but everything in here supports <code>breakpoint()</code> as long as the env var is correctly set up.</p>
+<p>Going back to <code>pdb</code>, turns out <code>set_trace</code> is just a simplified interface for the <code>Pdb</code> class, as we can see in <code>pdb</code>&rsquo;s <a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1609">source code</a>. The <a href="https://docs.python.org/3/library/pdb.html">docs</a> will also state that all <code>pdb</code>&rsquo;s functionality is defined inside the <code>Pdb</code> class, making the code extensible by nature.</p>
+<p>What&rsquo;s interesting about the <code>Pdb</code> class is that it implements two other classes <code>Bdb</code> and <code>Cmd</code> (as if we didn&rsquo;t already have enough acronyms). <a href="https://docs.python.org/3/library/bdb.html#module-bdb">Bdb</a> is python&rsquo;s debugger framework that provides basic capabilities like setting breakpoints; <a href="https://docs.python.org/3/library/cmd.html#module-cmd">Cmd</a> is a framework for writing line-oriented command interpreters. This means you don&rsquo;t necessarily need to inherit from <code>Pdb</code> if you want to create your custom debugger - you can do all the heavy lifting yourself using <code>Bdb</code> and <code>Cmd</code>. This is not the aim of this post though, we&rsquo;ll just extend <code>Pdb</code>&rsquo;s functionalities into our own tiny custom debugger module.</p>
 <h2 id="overriding-the-prompt">Overriding the prompt</h2>
-<p>Let&rsquo;s start with a very simple example: overriding the default <code>(Pdb)</code> prompt. We&rsquo;ll need two new python files: <code>dummy.py</code>, a dummy script for breakpoints and <code>debug.py</code>, which will host our new debugger. Here are the contents of my <code>dummy.py</code>, but it can be literally anything you want:</p>
+<p>Let&rsquo;s start with a very simple example: overriding the default <code>(Pdb)</code> prompt. We&rsquo;ll need two new python files: <code>dummy.py</code>, a dummy script for breakpoints and <code>debug.py</code>, which will host our new debugger. Here are the contents of my <code>dummy.py</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
 
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_the_things</span>(number, text, big_list):
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_the_things</span>(number: int, text: str, big_list: list):
     <span style="color:#f92672">import</span> pdb; pdb<span style="color:#f92672">.</span>set_trace()
 
     <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;Number: {number}, Text: {text}, List: {big_list}&#34;</span>)
@@ -144,34 +145,54 @@ print_the_things(
     debugger<span style="color:#f92672">.</span>set_trace(sys<span style="color:#f92672">.</span>_getframe()<span style="color:#f92672">.</span>f_back)
 </code></pre></div><p>What&rsquo;s going on with that code?</p>
 <ul>
-<li>The <code>__init__</code> function will call <code>Pdb</code>'s initializer through <code>super()</code>. We must do this <em>before</em> we throw in our prompt customization, as <code>Pdb</code> initializes <code>self.prompt</code> with <code>'(Pdb) '</code> (<a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L142">source</a>)</li>
-<li>We an then set <code>self.prompt</code> to whatever we want</li>
+<li>The <code>__init__</code> function will call <code>Pdb</code>&rsquo;s initializer through <code>super()</code>. We must do this <em>before</em> our prompt customization, as <code>Pdb</code> initializes <code>self.prompt</code> with <code>'(Pdb) '</code> (<a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L142">source</a>)</li>
+<li>A line setting <code>self.prompt</code> to whatever we want</li>
 <li><code>stop()</code> is a simplified interface to our custom debugger, analogous to <code>pdb.set_trace()</code>.</li>
 </ul>
 <p>Now we need to import our <em>custom</em> debugger inside <code>dummy.py</code>, calling our <em>custom</em> breakpoint function. Here&rsquo;s the modified code:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
 
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_the_things</span>(<span style="color:#f92672">**</span>kwargs):
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_the_things</span>(number: int, text: str, big_list: list):
     <span style="color:#f92672">import</span> debug; debug<span style="color:#f92672">.</span>stop()  <span style="color:#75715e"># custom breakpoint</span>
 
-    <span style="color:#66d9ef">for</span> key, value <span style="color:#f92672">in</span> kwargs<span style="color:#f92672">.</span>items():
-        <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;Arg: {key}, Value: {value}&#34;</span>)
+    <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;Number: {number}, Text: {text}, List: {big_list}&#34;</span>)
 
 
 print_the_things(
     number<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>,
     text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Blame and lies, contradictions arise&#34;</span>,
-    huge_list<span style="color:#f92672">=</span>[random() <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100000</span>)]
+    big_list<span style="color:#f92672">=</span>[random() <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100000</span>)]
 )
 </code></pre></div><p>Now if we run our dummy script&hellip;</p>
 <p><img src="/images/002/pdb-prompt-modified.png" alt="pdb-prompt-modified"></p>
 <p>&hellip; we get a custom prompt! What&rsquo;s cool about this structure is that this custom debugger will retain <em>all</em> of pdb&rsquo;s capabilities. You&rsquo;ll still have <code>n</code>, <code>s</code>, <code>r</code> and everything else.</p>
 <h2 id="building-a-custom-command">Building a custom command</h2>
 <p>Now that we got the basic structure going, we can push a bit more by creating a new command to our custom debugger.</p>
-<p>Earlier I mentioned that <code>Pdb</code> is built on top of other two classes, one of them being <code>Cmd</code>. This command class dictates how commands should be implemented to be recognized when an user enters the command on a debugging session. The structure is pretty simple: if your debugger class inherits <code>Cmd</code> and has a <code>do_something</code> method, <code>something</code> becomes a new command you can use in the debugger. Since we&rsquo;re extending <code>Pdb</code>, which in turn implements <code>Cmd</code>, we&rsquo;ll also have to abide by those rules.</p>
-<p>For reference, <a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1253">this link</a> shows how <code>Pdb</code> implements the long list command. Notice how it has a &ldquo;shortcut&rdquo; for long list called <code>ll</code>, created by referencing the original method: <code>do_ll = do_longlist</code>.</p>
-<p>The name of the custom command will be <code>args_memory_usage</code>, and the intent is to print inside the debugging session how much memory the args of the current function are consuming. The <code>sys</code> module has a function called <code>getsizeof</code> that could have been used for that, but while doing some research, I found that it <a href="https://stackoverflow.com/questions/449560/how-do-i-determine-the-size-of-an-object-in-python">won&rsquo;t really</a> be that precise in all cases. Fortunately, there&rsquo;s a really small dependency we can use for more accurate consumption stats called <a href="https://pypi.org/project/Pympler/">Pympler</a>, and we&rsquo;ll use pympler&rsquo;s <code>asizeof</code> for the task.</p>
+<p>Earlier I&rsquo;ve mentioned that <code>Pdb</code> is built on top of other two classes, one of them being <code>Cmd</code>. This class dictates how commands should be implemented to be recognized when an user enters the command on a debugging session. The structure is pretty simple: if your debugger class inherits <code>Cmd</code> and has a <code>do_something</code> method, <code>something</code> becomes a new command you can use in the debugger. Since we&rsquo;re extending <code>Pdb</code>, which in turn implements <code>Cmd</code>, we&rsquo;ll also have to follow the name convention.</p>
+<p>For reference, <a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1253">this link</a> shows how <code>Pdb</code> implements the long list command. Notice how it has a &ldquo;shortcut&rdquo; for long list called <code>ll</code>, created by referencing the original method: <code>do_ll = do_longlist</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Code from https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1265, added here for reference only.</span>
+<span style="color:#75715e"># Copied on May/2021 - currently implementation might be different.</span>
+
+(<span style="color:#f92672">...</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">do_longlist</span>(self, arg):
+    <span style="color:#e6db74">&#34;&#34;&#34;longlist | ll
+</span><span style="color:#e6db74">    List the whole source code for the current function or frame.
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    filename <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe<span style="color:#f92672">.</span>f_code<span style="color:#f92672">.</span>co_filename
+    breaklist <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_file_breaks(filename)
+    <span style="color:#66d9ef">try</span>:
+        lines, lineno <span style="color:#f92672">=</span> getsourcelines(self<span style="color:#f92672">.</span>curframe)
+    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">OSError</span> <span style="color:#66d9ef">as</span> err:
+        self<span style="color:#f92672">.</span>error(err)
+        <span style="color:#66d9ef">return</span>
+    self<span style="color:#f92672">.</span>_print_lines(lines, lineno, breaklist, self<span style="color:#f92672">.</span>curframe)
+do_ll <span style="color:#f92672">=</span> do_longlist
+
+
+(<span style="color:#f92672">...</span>)
+</code></pre></div><p>The name of our custom command will be <code>args_memory_usage</code>, and the intent is to print inside the debugging session how much memory the args of the current function are consuming. The <code>sys</code> module has a function called <code>getsizeof</code> that could have been used for that, but while doing some research, I found that it <a href="https://stackoverflow.com/questions/449560/how-do-i-determine-the-size-of-an-object-in-python">won&rsquo;t really</a> be that precise in all cases. Fortunately, there&rsquo;s a really small dependency we can use for more accurate consumption stats called <a href="https://pypi.org/project/Pympler/">Pympler</a>.</p>
 <p>I also wanted to make sure we&rsquo;re not just throwing bytes numbers at the user by default, as those can be a bit hard to understand for heavy objects. I wrote a pretty basic bytes/kb/mb convertor (I&rsquo;m using 1000 as base and I&rsquo;ll save yourself from all the discussions about 1000 vs 1024, SI, kibibytes, mebibytes and more), which will also be used to show how to pass args to custom commands.</p>
 <p>Here&rsquo;s our revamped <code>debug.py</code>:</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
@@ -224,6 +245,9 @@ print_the_things(
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> inspect
@@ -233,26 +257,29 @@ print_the_things(
 <span style="color:#f92672">from</span> pympler <span style="color:#f92672">import</span> asizeof
 
 
+KNOWN_UNITS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;KB&#34;</span>, <span style="color:#e6db74">&#34;MB&#34;</span>, <span style="color:#e6db74">&#34;BYTES&#34;</span>}
+
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Debug</span>(pdb<span style="color:#f92672">.</span>Pdb):
     <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
         super(Debug, self)<span style="color:#f92672">.</span>__init__(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
         self<span style="color:#f92672">.</span>prompt <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;[extended-pdb] &#34;</span>
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">format_bytes</span>(self, value, format):
-        unit_case_sensitive <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;kb&#34;</span> <span style="color:#66d9ef">if</span> format <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#66d9ef">else</span> format
-        unit <span style="color:#f92672">=</span> unit_case_sensitive<span style="color:#f92672">.</span>upper()
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">format_bytes</span>(self, value: int, unit: str) <span style="color:#f92672">-&gt;</span> str:
+        upper <span style="color:#f92672">=</span> unit<span style="color:#f92672">.</span>upper()
 
-        <span style="color:#66d9ef">if</span> unit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;KB&#34;</span>:
+        <span style="color:#75715e"># Forcing BYTES for unknown units</span>
+        base_unit <span style="color:#f92672">=</span> upper <span style="color:#66d9ef">if</span> upper <span style="color:#f92672">in</span> KNOWN_UNITS <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;BYTES&#34;</span>
+
+        <span style="color:#66d9ef">if</span> base_unit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;KB&#34;</span>:
             converted <span style="color:#f92672">=</span> value <span style="color:#f92672">/</span> <span style="color:#ae81ff">1000</span>
-        <span style="color:#66d9ef">elif</span> unit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;MB&#34;</span>:
+        <span style="color:#66d9ef">elif</span> base_unit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;MB&#34;</span>:
             converted <span style="color:#f92672">=</span> value <span style="color:#f92672">/</span> <span style="color:#ae81ff">1000000</span>
         <span style="color:#66d9ef">else</span>:
             converted <span style="color:#f92672">=</span> value
-            unit <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;bytes&#34;</span>
 
-        <span style="color:#66d9ef">return</span> f<span style="color:#e6db74">&#34;{converted:.2f} {unit}&#34;</span>
+        <span style="color:#66d9ef">return</span> f<span style="color:#e6db74">&#34;{converted:.2f} {base_unit}&#34;</span>
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">do_args_memory_usage</span>(self, arg):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">do_args_memory_usage</span>(self, arg: str):
         co <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe<span style="color:#f92672">.</span>f_code
         dict <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe_locals
         n <span style="color:#f92672">=</span> co<span style="color:#f92672">.</span>co_argcount <span style="color:#f92672">+</span> co<span style="color:#f92672">.</span>co_kwonlyargcount
@@ -277,20 +304,18 @@ print_the_things(
 </code></pre></td></tr></table>
 </div>
 </div><p>Where did all that code inside <code>do_args_memory_usage</code> come from?</p>
-<p>Well, <code>pdb</code> already has a pretty good <a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1134">implementation</a> for a command that will print all the args of the current function (<code>a</code>). It gets the function according to the current state of the debugger, finds the function&rsquo;s args and print them one by one. The <code>arg</code> parameter from <code>do_args_memory_usage</code> is the string that&rsquo;s entered <em>after</em> the command inside the debugging session (e.g. in <code>amu mb</code>, <code>arg</code> would be <code>mb</code>).</p>
-<p>Aside from the name of the function (and the shorthand <code>do_amu</code> in line <strong>43</strong>), the only changes I had to make to the original long list implementation are lines <strong>38</strong> and <strong>39</strong>, where I get the size in bytes of the variable and format according to the user input.</p>
-<p>The formatter function is extremely simple and naive to a certain degree (it doesn&rsquo;t handle all common units and forces <code>bytes</code> for unrecognized args), but providing a perfect implementation for that is beyond the scope of this post. The command now should be good enough to show basic consumption for function args.</p>
-<p>Let&rsquo;s check how that looks in the terminal:</p>
+<p>Well, <code>pdb</code> already has a pretty good <a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1134">implementation</a> for a command that will print all the args of the current function (<code>a</code>). It gets the function args according to the current state of the debugger and prints them one by one. The <code>arg</code> parameter from <code>do_args_memory_usage</code> is the string that&rsquo;s entered <em>after</em> the command inside the debugging session (e.g. for <code>amu mb</code>, <code>arg</code> would be <code>mb</code>).</p>
+<p>Aside from the name of the function (and the shorthand <code>do_amu</code> in line <strong>43</strong>), the only changes I had to make were lines <strong>38</strong> and <strong>39</strong>, where I get the size in bytes of the variable and apply the format according to the user input.</p>
+<p>The formatter function is extremely simple and has lots of room for improvement (constants, error handling, better formatting &hellip;), but providing a perfect implementation is beyond the scope of this post. The command should now be good enough to show basic consumption for function args. Let&rsquo;s check how that looks in the terminal:</p>
 <p><img src="/images/002/amu.png" alt="amu-cmd"></p>
-<p>This next pic shows the long version of the command and the fallback to <code>bytes</code>:</p>
+<p>This next pic shows the long version of the command and the fallback to <code>BYTES</code>:</p>
 <p><img src="/images/002/amu-2.png" alt="amu-cmd-with-long-command"></p>
-<p>Aaand now we have a brand new command built on top of <code>Pdb</code>! You can follow this same pattern to extend any commands you want from regular <code>Pdb</code> - the source code of the <code>pdb</code> module is not that hard to understand, and following the pattern above you should be able to customize any standard pdb functionalities you want.</p>
+<p>Aaand now we have a brand new command built on top of <code>Pdb</code>! You can follow this same pattern to extend any commands you want from regular <code>Pdb</code> - the source code of the <code>pdb</code> module is not that hard to understand and the pattern above applies to any other new commands you might create.</p>
 <h2 id="one-caveat">One caveat</h2>
-<p>Something to be aware of when playing with these customizations is that <em>any</em> custom debugger will have to be manually installed for any new virtual/conda environment you create. That is also true for any of its dependencies. This means that you&rsquo;ll have to wrap your custom debugger in a package with <code>setup.py</code> and the likes, to make a custom debugger functional in the wild.</p>
-<p>Currently I&rsquo;m a heavy user of <code>pdbpp</code> and <code>conda</code> environments, so I have an alias in my <code>.bashrc</code> to install the debugger for every new conda environment I create. If you don&rsquo;t use a dependency manager like Poetry, keep in mind that your debugger and it&rsquo;s dependencies will show up in you <code>pip freeze</code>, which might not be optimal in some cases.</p>
-<p>As long as you can tame the custom debugger dependencies, this whole process can easily be managed.</p>
+<p>Something to be aware of when playing with these customizations is that <em>any</em> custom debugger will have to be manually installed for any new virtual/conda environments. This means you&rsquo;ll have to wrap your custom debugger in a package with <code>setup.py</code> and the likes, to make a custom debugger functional in the wild.</p>
+<p>Currently I&rsquo;m a heavy user of <code>pdbpp</code> and <code>conda</code> environments, so I have an alias in my <code>.bashrc</code> to install the debugger for every new conda environment I create. Beware that any dependencies that might come with your custom debugger might impact other dependencies in your current environment. Personally I never had any issues, but dependency conflicts are always a possibility.</p>
 <h2 id="next-steps">Next steps</h2>
-<p>The two main reasons I became a user of <code>pdbpp</code> are the built-in support to themes through <a href="https://pygments.org/">Pygments</a> and the sticky mode (which helps me with not getting <em>totally lost</em> while debugging). Before writing this post I had no idea how easy it was to create basic extensions to pdb, so I&rsquo;m tempted so spend some time trying to make my own implementations of those features, for learning purposes. But not today - the avalanche of acronyms in this post kinda made my head hurt a bit. Hopefully that wasn&rsquo;t the case for you.</p>
+<p>The two main reasons I became a user of <code>pdbpp</code> are the built-in support to themes through <a href="https://pygments.org/">Pygments</a> and the sticky mode, which helps me with not getting <em>totally lost</em> while debugging. Before writing this post I had no idea how easy it was to create basic extensions to pdb, so I&rsquo;m tempted so spend some time trying to make my own implementations of those features, for learning purposes. But not today - the avalanche of acronyms in this post kinda made my head hurt a bit. Hopefully that wasn&rsquo;t the case for you.</p>
 <p>I hope you enjoyed the post, see you in the next one!</p>
 <hr>
 <h4 id="tech-summary">Tech summary</h4>

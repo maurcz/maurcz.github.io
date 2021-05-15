@@ -6,11 +6,7 @@
     <description>Recent content in Posts on Mauricio R. Cruz</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 03 Oct 2020 21:04:28 -0400</lastBuildDate>
-    
-	<atom:link href="https://maurcz.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 03 Oct 2020 21:04:28 -0400</lastBuildDate><atom:link href="https://maurcz.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Customizing the Python Debugger</title>
       <link>https://maurcz.github.io/posts/002-customizing-the-python-debugger/</link>
