@@ -6,7 +6,97 @@
     <description>Recent content in Tags on Mauricio R. Cruz</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 03 Oct 2020 21:04:28 -0400</lastBuildDate><atom:link href="https://maurcz.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 12 Jul 2021 20:29:25 -0400</lastBuildDate><atom:link href="https://maurcz.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>dependabot</title>
+      <link>https://maurcz.github.io/tags/dependabot/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/dependabot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dependency</title>
+      <link>https://maurcz.github.io/tags/dependency/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/dependency/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lockfile</title>
+      <link>https://maurcz.github.io/tags/lockfile/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/lockfile/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>management</title>
+      <link>https://maurcz.github.io/tags/management/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/management/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pip</title>
+      <link>https://maurcz.github.io/tags/pip/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/pip/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pip-compile</title>
+      <link>https://maurcz.github.io/tags/pip-compile/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/pip-compile/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pipenv</title>
+      <link>https://maurcz.github.io/tags/pipenv/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/pipenv/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>poetry</title>
+      <link>https://maurcz.github.io/tags/poetry/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/poetry/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>safety</title>
+      <link>https://maurcz.github.io/tags/safety/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/safety/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tox</title>
+      <link>https://maurcz.github.io/tags/tox/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/tags/tox/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>custom</title>
       <link>https://maurcz.github.io/tags/custom/</link>

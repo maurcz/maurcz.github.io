@@ -1,7 +1,7 @@
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;    
+    min-height: 100vh;
     font-family: 'Merriweather', serif;
 }
 
@@ -16,6 +16,11 @@ a {
 hr {
 	background-color: #ccc;
 	height: 1px;
+}
+
+code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: .9em !important;
 }
 
 .highlight-color {
@@ -93,11 +98,12 @@ hr {
 	border-color: #d91717e8;
 }
 
+
 /* Mobile */
-@media only screen 
-  and (min-device-width: 375px) 
-  and (max-device-width: 667px) 
-  and (-webkit-min-device-pixel-ratio: 2) { 
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 667px)
+  and (-webkit-min-device-pixel-ratio: 2) {
 
     .logo h1,
     .navbar-item{
@@ -116,19 +122,19 @@ hr {
     .summary {
         font-size: 26px !important;
     }
-    
+
     footer {
         font-size: 22px !important;
     }
-    
+
     section p {
         font-size: 26px !important;
-    }    
+    }
 }
 
-@media only screen 
+@media only screen
   and (max-device-width: 980px) {
       .max-content-width{
           max-width: 95%;
       }
-  } 
+  }

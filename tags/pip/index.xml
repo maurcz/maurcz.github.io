@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>pip on Mauricio R. Cruz</title>
+    <link>https://maurcz.github.io/tags/pip/</link>
+    <description>Recent content in pip on Mauricio R. Cruz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 12 Jul 2021 20:29:25 -0400</lastBuildDate><atom:link href="https://maurcz.github.io/tags/pip/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dependency Management</title>
+      <link>https://maurcz.github.io/posts/003-dependency-management/</link>
+      <pubDate>Mon, 12 Jul 2021 20:29:25 -0400</pubDate>
+      
+      <guid>https://maurcz.github.io/posts/003-dependency-management/</guid>
+      <description>A guide on the whys behind taming your python dependencies, with lots of recommendations.</description>
+    </item>
+    
+  </channel>
+</rss>
