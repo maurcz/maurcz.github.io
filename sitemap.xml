@@ -11,9 +11,6 @@
     <loc>https://maurcz.github.io/tags/dependency/</loc>
     <lastmod>2021-07-12T20:29:25-04:00</lastmod>
   </url><url>
-    <loc>https://maurcz.github.io/posts/003-dependency-management/</loc>
-    <lastmod>2021-07-12T20:29:25-04:00</lastmod>
-  </url><url>
     <loc>https://maurcz.github.io/tags/lockfile/</loc>
     <lastmod>2021-07-12T20:29:25-04:00</lastmod>
   </url><url>
@@ -39,6 +36,9 @@
     <lastmod>2021-07-12T20:29:25-04:00</lastmod>
   </url><url>
     <loc>https://maurcz.github.io/categories/python/</loc>
+    <lastmod>2021-07-12T20:29:25-04:00</lastmod>
+  </url><url>
+    <loc>https://maurcz.github.io/posts/003-python-dependency-management/</loc>
     <lastmod>2021-07-12T20:29:25-04:00</lastmod>
   </url><url>
     <loc>https://maurcz.github.io/tags/safety/</loc>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en-us" class="bg-color"><head>
+    <meta charset="utf-8">
+    <meta name="description" content="A guide on the whys behind taming your python dependencies, with lots of recommendations. ">
+    <link rel="canonical" href="https://maurcz.github.io/posts/003-python-dependency-management/" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css" integrity="sha256-aPeK/N8IHpHsvPBCf49iVKMdusfobKo2oxF8lRruWJg=" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha256-HkXXtFRaflZ7gjmpjGQBENGnq8NIno4SDNq/3DbkMgo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>Python Dependency Management | Mauricio R. Cruz</title>
+    <meta property="og:title" content="Python Dependency Management" />
+<meta property="og:description" content="A guide on the whys behind taming your python dependencies, with lots of recommendations." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://maurcz.github.io/posts/003-python-dependency-management/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-07-12T20:29:25-04:00" />
+<meta property="article:modified_time" content="2021-07-12T20:29:25-04:00" />
+
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python Dependency Management"/>
+<meta name="twitter:description" content="A guide on the whys behind taming your python dependencies, with lots of recommendations."/>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-20528578-10', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head><body class="flex-box-align-center"><header class="flex-item-width">
+    <nav class="navbar bg-color" role="navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="/" title="home" class="navbar-item">
+                    <span class="logo"><h1>Mauricio R. Cruz</h1></span>
+                </a>
+                
+                <a href="mailto:mauriciorcruz@gmail.com" class="navbar-item is-hidden-desktop" title="Email">
+                    <span class="icon"><i class='fa fa-envelope'></i></span>
+                </a>
+                
+                <a href="https://github.com/maurcz" class="navbar-item is-hidden-desktop" title="GitHub">
+                    <span class="icon"><i class='fab fa-github'></i></span>
+                </a>
+                
+                <a href="https://www.linkedin.com/in/mauriciorcruz/" class="navbar-item is-hidden-desktop" title="LinkedIn">
+                    <span class="icon"><i class='fab fa-linkedin'></i></span>
+                </a>
+                
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    
+                    <a href="/about" class="navbar-item">About</a>
+                    
+                    <a href="/" class="navbar-item">Posts</a>
+                    
+                </div>
+                <div class="navbar-end">
+                    
+                    <a href="mailto:mauriciorcruz@gmail.com" class="navbar-item is-hidden-touch" title="Email">
+                        <span class="icon"><i class='fa fa-envelope'></i></span>
+                    </a>
+                    
+                    <a href="https://github.com/maurcz" class="navbar-item is-hidden-touch" title="GitHub">
+                        <span class="icon"><i class='fab fa-github'></i></span>
+                    </a>
+                    
+                    <a href="https://www.linkedin.com/in/mauriciorcruz/" class="navbar-item is-hidden-touch" title="LinkedIn">
+                        <span class="icon"><i class='fab fa-linkedin'></i></span>
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+    </nav>
+    <script>
+        $(document).ready(function () {
+            $(".navbar-burger").click(function () {
+                $(".navbar-burger").toggleClass("is-active");
+                $(".navbar-menu").toggleClass("is-active");
+            })
+        })
+    </script>    
+</header><main class="flex-item-width">
+<section class="section">
+    <article>
+        <div class="columns is-centered">
+            <div class="column max-content-width">
+                <h2 class="title is-2 highlight-color">Python Dependency Management</h2>
+                <p class="subtitle single-subtitle">
+                    <time>July 12, 2021</time> | 19 minutes 
+                </p>
+                <div class="content single-content">
+                    <p>Dependencies are not going anywhere anytime soon.</p>
+<p>One of the major things that move the tech space forward is the ability to combine packages created by others when you&rsquo;re giving life to your own project. And as any developer that&rsquo;s been around for a while, I can tell you the list of dependencies in a system tend to grow <strong>tremendously</strong> over time - be it third-party or internal ones. How do you handle all of that?</p>
+<p>Through suffering, pain and despair&hellip; or by learning proper dependency management.</p>
+<p>Taming the dependency beasts is way harder than most developers would anticipate. 2 years ago, when I started working with Python, it shocked me when I realized that bare <code>pip</code> provided pretty minimal <em>proper</em> dependency management support (but things have changed ever since - more on that later). The ecosystem has the likes of <code>poetry</code>, <code>pipenv</code> and <code>pip-compile</code> to fill in the gaps but, in my experience, there are people that still think the <code>pip</code> + <code>requirements.txt</code> combo is more than enough. Others, especially the ones that use python to achieve <em>something</em> but have no software development background (like most Data Scientists I&rsquo;ve met), really struggle to understand why we need all the extra controls around a simple <code>pip install</code>.</p>
+<p>I&rsquo;ve had my <em>fair</em> share of dependency issues ever since I became a python developer, and my intention with this post is to share everything I&rsquo;ve learned along the way. I&rsquo;m also aiming to focus on the <em>whys</em> behind every decision - something I feel is often lacking for dependency management explanations. The topics are supposed to build on top of each other, so you&rsquo;re free to skip the ones you&rsquo;ve already mastered.</p>
+<p>Welcome to the sea of versions, where a 0.1.0 that depends on a 4.2.1 could totally break your 2.3.0 if you don&rsquo;t install the new 3.4.1 patch for your dependency management tool.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#underlying-dependencies">Underlying Dependencies</a></li>
+<li><a href="#dependency-resolution">Dependency Resolution</a></li>
+<li><a href="#lockfiles">Lockfiles</a></li>
+<li><a href="#package-integrity">Package Integrity</a></li>
+<li><a href="#private-feeds">Private Feeds</a></li>
+<li><a href="#vulnerability-scans">Vulnerability Scans</a></li>
+<li><a href="#testing-against-multiple-python-versions">Testing Against Multiple Python Versions</a></li>
+<li><a href="#review">Review</a></li>
+</ul>
+<h2 id="underlying-dependencies">Underlying Dependencies</h2>
+<p>When you start working with Python, people tell you about the magic that <code>pip</code> provides: through a few simple commands, you get access to <a href="https://pypi.org/simple/">lots</a> of interesting packages to use in your projects. However, in my experience, it takes some time for newcomers to realize that one package might depend <em>on <strong>many</strong> others</em>.</p>
+<p>Let&rsquo;s use the popular package publisher <code>twine</code> as an example. All you have to do to install this package is <code>pip install twine</code>. Pip, by default, will hit <a href="https://pypi.org/project/twine/">PyPi</a>, download/install the package and also <em>all of twine&rsquo;s dependencies</em>. Here&rsquo;s the dependency graph for <code>twine</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">twine<span style="color:#f92672">==</span><span style="color:#ae81ff">3.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>
+  <span style="color:#f92672">-</span> colorama [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">0.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3</span>, installed: <span style="color:#ae81ff">0.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4</span>]
+  <span style="color:#f92672">-</span> importlib<span style="color:#f92672">-</span>metadata [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">3.6</span>, installed: <span style="color:#ae81ff">4.5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+    <span style="color:#f92672">-</span> zipp [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">0.5</span>, installed: <span style="color:#ae81ff">3.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+  <span style="color:#f92672">-</span> keyring [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">15.1</span>, installed: <span style="color:#ae81ff">23.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+    <span style="color:#f92672">-</span> importlib<span style="color:#f92672">-</span>metadata [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">3.6</span>, installed: <span style="color:#ae81ff">4.5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+      <span style="color:#f92672">-</span> zipp [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">0.5</span>, installed: <span style="color:#ae81ff">3.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+  <span style="color:#f92672">-</span> pkginfo [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">1.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2</span>, installed: <span style="color:#ae81ff">1.7</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+  <span style="color:#f92672">-</span> readme<span style="color:#f92672">-</span>renderer [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">21.0</span>, installed: <span style="color:#ae81ff">29.0</span>]
+    <span style="color:#f92672">-</span> bleach [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2.1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>, installed: <span style="color:#ae81ff">3.3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+      <span style="color:#f92672">-</span> packaging [required: Any, installed: <span style="color:#ae81ff">20.9</span>]
+        <span style="color:#f92672">-</span> pyparsing [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2</span>, installed: <span style="color:#ae81ff">2.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">7</span>]
+      <span style="color:#f92672">-</span> six [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">1.9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>, installed: <span style="color:#ae81ff">1.16</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+      <span style="color:#f92672">-</span> webencodings [required: Any, installed: <span style="color:#ae81ff">0.5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+    <span style="color:#f92672">-</span> docutils [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">0.13</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>, installed: <span style="color:#ae81ff">0.17</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+    <span style="color:#f92672">-</span> Pygments [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2.5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>, installed: <span style="color:#ae81ff">2.9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+    <span style="color:#f92672">-</span> six [required: Any, installed: <span style="color:#ae81ff">1.16</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+  <span style="color:#f92672">-</span> requests [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2.20</span>, installed: <span style="color:#ae81ff">2.25</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+    <span style="color:#f92672">-</span> certifi [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2017.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">17</span>, installed: <span style="color:#ae81ff">2021.5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">30</span>]
+    <span style="color:#f92672">-</span> chardet [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">3.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2</span>,<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">5</span>, installed: <span style="color:#ae81ff">4.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+    <span style="color:#f92672">-</span> idna [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2.5</span>,<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">3</span>, installed: <span style="color:#ae81ff">2.10</span>]
+    <span style="color:#f92672">-</span> urllib3 [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">1.21</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>,<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1.27</span>, installed: <span style="color:#ae81ff">1.26</span><span style="color:#f92672">.</span><span style="color:#ae81ff">6</span>]
+  <span style="color:#f92672">-</span> requests<span style="color:#f92672">-</span>toolbelt [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">0.8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>,<span style="color:#f92672">!=</span><span style="color:#ae81ff">0.9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>, installed: <span style="color:#ae81ff">0.9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+    <span style="color:#f92672">-</span> requests [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>,<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">3.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>, installed: <span style="color:#ae81ff">2.25</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+      <span style="color:#f92672">-</span> certifi [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2017.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">17</span>, installed: <span style="color:#ae81ff">2021.5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">30</span>]
+      <span style="color:#f92672">-</span> chardet [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">3.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2</span>,<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">5</span>, installed: <span style="color:#ae81ff">4.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+      <span style="color:#f92672">-</span> idna [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">2.5</span>,<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">3</span>, installed: <span style="color:#ae81ff">2.10</span>]
+      <span style="color:#f92672">-</span> urllib3 [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">1.21</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>,<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1.27</span>, installed: <span style="color:#ae81ff">1.26</span><span style="color:#f92672">.</span><span style="color:#ae81ff">6</span>]
+  <span style="color:#f92672">-</span> rfc3986 [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">1.4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>, installed: <span style="color:#ae81ff">1.5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>]
+  <span style="color:#f92672">-</span> tqdm [required: <span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">4.14</span>, installed: <span style="color:#ae81ff">4.61</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>]
+
+
+<span style="color:#75715e"># NOTE: dependency graph generated using a dependency management tool</span>
+<span style="color:#75715e"># - &#34;required&#34; are directives specified by twine</span>
+<span style="color:#75715e"># - &#34;installed&#34; is the version that the tool decided to install.</span>
+</code></pre></div><p>That&rsquo;s way more packages than someone would expect, right? Dependency chains can get super complicated, like <code>twine &gt; readme-rendered &gt; bleach &gt; packaging &gt; pyparsing</code>. Also notice how there are some <em>repeated</em> entries for a few packages. <code>requests</code> is both required by <code>twine</code> directly and <code>requests-toolbelt</code>.</p>
+<p>The key take-away here is realizing that this is the graph for <em>one single</em> dependency. Your large project can easily go above the mark of 100 total packages, even though all you&rsquo;re asking for are 20. After all, if you can ask for dependencies, so can the creators of the dependencies you&rsquo;re using, right?</p>
+<p>But how are those chains generated? Projects often have a file called <code>setup.py</code> which can be used to specify the <em>underlying dependencies</em> that are required if someone ever tries to install the project as a package. Here&rsquo;s an excerpt of the <code>setup.py</code> <a href="https://github.com/psf/requests/blob/v2.25.1/setup.py">from</a> the <code>requests</code> package:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">requires <span style="color:#f92672">=</span> [
+    <span style="color:#e6db74">&#39;chardet&gt;=3.0.2,&lt;5&#39;</span>,
+    <span style="color:#e6db74">&#39;idna&gt;=2.5,&lt;3&#39;</span>,
+    <span style="color:#e6db74">&#39;urllib3&gt;=1.21.1,&lt;1.27&#39;</span>,
+    <span style="color:#e6db74">&#39;certifi&gt;=2017.4.17&#39;</span>
+
+]
+test_requirements <span style="color:#f92672">=</span> [
+    <span style="color:#e6db74">&#39;pytest-httpbin==0.0.7&#39;</span>,
+    <span style="color:#e6db74">&#39;pytest-cov&#39;</span>,
+    <span style="color:#e6db74">&#39;pytest-mock&#39;</span>,
+    <span style="color:#e6db74">&#39;pytest-xdist&#39;</span>,
+    <span style="color:#e6db74">&#39;PySocks&gt;=1.5.6, !=1.5.7&#39;</span>,
+    <span style="color:#e6db74">&#39;pytest&gt;=3&#39;</span>
+]
+
+(<span style="color:#f92672">...</span>)
+
+setup(
+    name<span style="color:#f92672">=</span>about[<span style="color:#e6db74">&#39;__title__&#39;</span>],
+    version<span style="color:#f92672">=</span>about[<span style="color:#e6db74">&#39;__version__&#39;</span>],
+    description<span style="color:#f92672">=</span>about[<span style="color:#e6db74">&#39;__description__&#39;</span>],
+    long_description<span style="color:#f92672">=</span>readme,
+    long_description_content_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;text/markdown&#39;</span>,
+    author<span style="color:#f92672">=</span>about[<span style="color:#e6db74">&#39;__author__&#39;</span>],
+    author_email<span style="color:#f92672">=</span>about[<span style="color:#e6db74">&#39;__author_email__&#39;</span>],
+    url<span style="color:#f92672">=</span>about[<span style="color:#e6db74">&#39;__url__&#39;</span>],
+    packages<span style="color:#f92672">=</span>packages,
+    package_data<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;&#39;</span>: [<span style="color:#e6db74">&#39;LICENSE&#39;</span>, <span style="color:#e6db74">&#39;NOTICE&#39;</span>]},
+    package_dir<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;requests&#39;</span>: <span style="color:#e6db74">&#39;requests&#39;</span>},
+    include_package_data<span style="color:#f92672">=</span>True,
+    python_requires<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&gt;=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*&#34;</span>,
+    install_requires<span style="color:#f92672">=</span>requires,
+    license<span style="color:#f92672">=</span>about[<span style="color:#e6db74">&#39;__license__&#39;</span>],
+    zip_safe<span style="color:#f92672">=</span>False,
+    classifiers<span style="color:#f92672">=</span>[
+        <span style="color:#e6db74">&#39;Development Status :: 5 - Production/Stable&#39;</span>,
+        <span style="color:#e6db74">&#39;Intended Audience :: Developers&#39;</span>,
+        <span style="color:#e6db74">&#39;Natural Language :: English&#39;</span>,
+        <span style="color:#e6db74">&#39;License :: OSI Approved :: Apache Software License&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: 2&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: 2.7&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: 3&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: 3.5&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: 3.6&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: 3.7&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: 3.8&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: 3.9&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: Implementation :: CPython&#39;</span>,
+        <span style="color:#e6db74">&#39;Programming Language :: Python :: Implementation :: PyPy&#39;</span>
+    ],
+    cmdclass<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;test&#39;</span>: PyTest},
+    tests_require<span style="color:#f92672">=</span>test_requirements,
+    extras_require<span style="color:#f92672">=</span>{
+        <span style="color:#e6db74">&#39;security&#39;</span>: [<span style="color:#e6db74">&#39;pyOpenSSL &gt;= 0.14&#39;</span>, <span style="color:#e6db74">&#39;cryptography&gt;=1.3.4&#39;</span>],
+        <span style="color:#e6db74">&#39;socks&#39;</span>: [<span style="color:#e6db74">&#39;PySocks&gt;=1.5.6, !=1.5.7&#39;</span>],
+        <span style="color:#e6db74">&#39;socks:sys_platform == &#34;win32&#34; and python_version == &#34;2.7&#34;&#39;</span>: [<span style="color:#e6db74">&#39;win_inet_pton&#39;</span>],
+    },
+    project_urls<span style="color:#f92672">=</span>{
+        <span style="color:#e6db74">&#39;Documentation&#39;</span>: <span style="color:#e6db74">&#39;https://requests.readthedocs.io&#39;</span>,
+        <span style="color:#e6db74">&#39;Source&#39;</span>: <span style="color:#e6db74">&#39;https://github.com/psf/requests&#39;</span>,
+    },
+)
+</code></pre></div><p>As you can see from above, the <code>requires</code> variable at the beginning is listing all the packages that are required for <code>requests</code> to work. Graphs like the one I&rsquo;ve showed before are generated base on those directives. This file will also have other useful info like project metadata, target python versions, classifiers, license&hellip; Digging into those is out of the scope of the post, and so is the fact that <code>setup.py</code> is bound to be replaced by something better in the future<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>Files like <code>setup.py</code> are used when a project is converted to a <em>wheel</em>. A wheel is the actual file you generally <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> download whenever you install a package using <code>pip</code>. Even though the package has a <code>.whl</code> extension, it&rsquo;s just a zip file holding metadata about the package and the actual dependency code you&rsquo;ll call from your project. So while you can express which dependencies you want through <code>setup.py</code>, it is actually the wheel that will hold the list of dependencies when your package is distributed.</p>
+<p>So now you&rsquo;re aware that a simple <code>pip install</code> can actually install a bunch of stuff and not only the single package you&rsquo;ve specified. You also know that a package has ways to specify <em>other</em> packages that are needed for it to work. But things start to get really interesting when a system needs to decide which versions of each package should be installed for a project. If underlying packages end up somehow asking for conflicting versions, what should you do?</p>
+<h2 id="dependency-resolution">Dependency Resolution</h2>
+<p>By now, if you thought underlying dependencies can create all sorts of chaos if not handled properly, then you&rsquo;re goddam right. Let&rsquo;s consider the following example to illustrate some of the issues.</p>
+<p>You want to download and install a python package called <code>lamb-of-god</code>. This package depends on two other packages, <code>metallica</code> and <code>megadeth</code>. Both of these packages depend on another package called <code>black-sabbath</code>. What if <code>metallica</code> and <code>megadeth</code> have different version requirements for <code>black-sabbath</code>? How to decide which version to install?</p>
+<p>You&rsquo;re probably confused - btw, welcome to dependencies - so here&rsquo;s what I&rsquo;m taking about:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">LAMB<span style="color:#f92672">-</span>OF<span style="color:#f92672">-</span>GOD <span style="color:#ae81ff">1.0</span> requires:
+    <span style="color:#f92672">-</span> METALLICA <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1.1</span>, <span style="color:#f92672">&lt;</span><span style="color:#ae81ff">2.0</span>
+    <span style="color:#f92672">-</span> MEGADETH <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2.3</span>
+
+    METALLICA <span style="color:#ae81ff">1.2</span> requires:
+        <span style="color:#f92672">-</span> BLACK<span style="color:#f92672">-</span>SABBATH <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1.0</span>, <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2.0</span>
+
+    MEGADETH <span style="color:#ae81ff">2.3</span> requires:
+        <span style="color:#f92672">-</span> BLACK<span style="color:#f92672">-</span>SABBATH <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1.3</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2.0</span>
+
+<span style="color:#75715e"># (assuming that METALLICA 1.2 and MEGADETH 2.3 are the latest available versions of those packages)</span>
+</code></pre></div><p>Considering that the latest <code>black-sabbath</code> ever released was <code>1.8</code>, we could probably say that <code>black-sabbath==1.8</code> is the right version we should use (it would match the requirements of both <code>metallica</code> and <code>megadeth</code>). But what if, while deciding to upgrade our <code>lamb-of-god</code> package on a later date, we end up with a tree that looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">LAMB<span style="color:#f92672">-</span>OF<span style="color:#f92672">-</span>GOD <span style="color:#ae81ff">1.1</span> requires:
+    <span style="color:#f92672">-</span> METALLICA <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1.1</span>, <span style="color:#f92672">&lt;</span><span style="color:#ae81ff">2.0</span>
+    <span style="color:#f92672">-</span> MEGADETH <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2.3</span>
+
+    METALLICA <span style="color:#ae81ff">1.5</span> requires:    <span style="color:#75715e"># new release came out, tree updated</span>
+        <span style="color:#f92672">-</span> BLACK<span style="color:#f92672">-</span>SABBATH <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1.0</span>, <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2.0</span>
+
+    MEGADETH <span style="color:#ae81ff">3.0</span> requires:     <span style="color:#75715e"># new release came out, tree updated</span>
+        <span style="color:#f92672">-</span> BLACK<span style="color:#f92672">-</span>SABBATH <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2.0</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">3.0</span>
+
+<span style="color:#75715e"># (now METALLICA 1.5 and MEGADETH 3.0 are the latest available versions of those packages)</span>
+</code></pre></div><p>Can you spot the problem with those requirements? There&rsquo;s <strong>no version</strong> of <code>black-sabbath</code> that would serve both <code>metallica</code> and <code>megadeth</code> (actually in the early days I bet there wasn&rsquo;t a lot of things that these two bands would agree with). What we have here is a <strong>dependency conflict</strong> - underlying dependencies are asking for two conflicting versions of the same package. That&rsquo;s one of the jobs of a dependency resolution algorithm: traverse through the dependency tree, try to find versions that would meet <em>all</em> requirements and stop the installation in case of any conflicts.</p>
+<p>What&rsquo;s hard to grasp is that this might <em>not</em> be <code>lamb-of-god</code>&rsquo;s fault. Maybe the package was created before <code>metallica==1.5</code> and <code>megadeth==3.0</code> were released, and back then they would agree on which version of <code>black-sabbath</code> to use. Packages are often not maintained by the same group of developers, and errors due to misaligned dependencies are <a href="https://www.google.com/search?client=firefox-b-1-d&amp;q=python+dependency+conflict">far from being rare</a>.</p>
+<p>But why are misaligned dependencies a problem? Well, different versions of packages might contain different code and different APIs (args/functions you can use). For example, in the second tree, the <code>black-sabbath</code> that <code>metallica</code> wants might have a module called <code>ozzy-osbourne</code>, but the version <code>megadeth</code> wants replaced that module by another one called <code>ronnie-james-dio</code> (if you didn&rsquo;t get the joke, Black Sabbath switched singers at some point). It&rsquo;s not just names that can change - the code itself might be doing something completely different, <em>even if the function name/args stays the same</em>. Did you ever face a really sketchy bug that makes you want to cry on a Friday at 4:59p? This is one of the ways they come to life.</p>
+<p>Realizing misaligned dependencies are a problem is the first step towards proper dependency management. But you know what&rsquo;s really fun about this whole ordeal? Older versions of <code>pip</code> would <strong>not</strong> have bombed with my second example! Here&rsquo;s a quote from <a href="https://pyfound.blogspot.com/2020/03/new-pip-resolver-to-roll-out-this-year.html">this</a> blog post from March 2020, that explains some of the problems with old <code>pip</code>:</p>
+<p><em>(while talking about some of the proposed enhancements)</em></p>
+<ul>
+<li><em>It will reduce inconsistency: it will no longer install a combination of packages that is mutually inconsistent. At the moment, it is possible for pip to install a package which does not satisfy the declared requirements of another installed package. For example, right now, pip install &ldquo;six&lt;1.12&rdquo; &ldquo;virtualenv==20.0.2&rdquo; does the wrong thing, “successfully” installing six==1.11, even though virtualenv==20.0.2 requires six&gt;=1.12.0,&lt;2 (defined here). The new resolver would, instead, outright reject installing anything if it got that input.</em></li>
+<li><em>It will be stricter - if you ask pip to install two packages with incompatible requirements, it will refuse (rather than installing a broken combination, like it does now).</em></li>
+</ul>
+<p>The bottom line of this text is that old versions of <code>pip</code> (&lt;20.3) will not care about conflicts: it just picks one of the two. Now of course there were ways around that (like using a better dependency management tool or being clever about the order of <code>pip</code> of operations), but there are lots of people that were/are completely unaware of this and <em>will end up with conflicting dependencies in their environments</em>. The project might still work for a while, but when dependencies get misaligned, you might end up with a time bomb in your hands.</p>
+<p>Another issue you might face if don&rsquo;t tame your dependencies from the start, is that trying to fix the dependency tree <em>after you became used to conflicting dependencies</em> can be a huge pain in the ass. I&rsquo;ve seen the dread in some developer&rsquo;s eyes from miles away when they were tasked with such work.</p>
+<p>Luckily, today there&rsquo;s plenty of resources you can use to get you dependencies aligned. With <code>pip</code>&rsquo;s new dependency resolver<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, odds are most new projects won&rsquo;t suffer as much. We also have ways to pin dependencies to certain versions once the tree has been resolved, preventing the system from having to re-solve the tree during installations (think Docker or pipelines). But is proper dependency resolution enough?</p>
+<h2 id="lockfiles">Lockfiles</h2>
+<p>Let&rsquo;s say your dependency tree was resolved by a good dependency resolver algorithm and you had no conflicting dependencies. A common practice in the industry is to <em>lock</em> those installed versions, so that future installations of you project won&rsquo;t have to resolve the tree again, referring to the versions locked in a file.</p>
+<p>That&rsquo;s one of the use-cases for <em>lockfiles</em>: persisting into a file the list of <em>specific</em> dependencies returned from the dependency resolver. So a potential representation of a lock file for my first <code>lamb-of-code==1.0</code> example could be:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># rudimentar_example_of_pinning_dependencies.lock</span>
+
+metallica<span style="color:#f92672">==</span><span style="color:#ae81ff">1.2</span>
+megadeth<span style="color:#f92672">==</span><span style="color:#ae81ff">2.3</span>
+black<span style="color:#f92672">-</span>sabbath<span style="color:#f92672">==</span><span style="color:#ae81ff">1.8</span>
+</code></pre></div><p>Further installations would not try to resolve the dependency chain - they would go straight up into the list of pins and use that to install the project. Lockfiles are normally committed to the repo, so that other users / image builds / testing frameworks / pipelines can install based on that list of dependencies that should work well together. These will often be called <em>deterministic builds</em>.</p>
+<p>However, lockfiles can give you more than just a simple list of pinned dependencies.</p>
+<h3 id="package-integrity">Package Integrity</h3>
+<p>PyPi is an open repository and there&rsquo;s not a formal review process before a package gets accepted. PyPi is also a constant target of attacks by malicious individuals, trying to mess up with your system/wallet:</p>
+<ul>
+<li><a href="https://arstechnica.com/gadgets/2021/06/counterfeit-pypi-packages-with-5000-downloads-installed-cryptominers/">https://arstechnica.com/gadgets/2021/06/counterfeit-pypi-packages-with-5000-downloads-installed-cryptominers/</a></li>
+<li><a href="https://www.theverge.com/2021/2/10/22276857/security-researcher-repository-exploit-apple-microsoft-vulnerability">https://www.theverge.com/2021/2/10/22276857/security-researcher-repository-exploit-apple-microsoft-vulnerability</a></li>
+<li><a href="https://www.theregister.com/2021/03/02/python_pypi_purges/">https://www.theregister.com/2021/03/02/python_pypi_purges/</a></li>
+</ul>
+<p>While one of the most obvious forms of attacks is <a href="https://nakedsecurity.sophos.com/2017/09/19/pypi-python-repository-hit-by-typosquatting-sneak-attack/">typosquatting</a> (<em>slightly</em> changing the name of the package, in the hopes someone makes a typo during installs), you really can&rsquo;t know if maintainers of a proper library had their systems hijacked, converting the <em>code</em> (not the name) of a package to evil. The package name/version might still be the same, but the contents inside could have been changed. How do you protect your system from this?</p>
+<p>Well, your lockfile can store a <em>hash</em> for each one of the dependencies on the first install, which can later be used to validate if the package you&rsquo;re downloading has <em>really</em> the same contents you are expecting. Hashes for packages are normally provided by the package index (like <a href="https://pypi.org/project/numpy/#files">PyPi</a> - notice the &ldquo;View&rdquo; button at the right) or be generated locally for a dependency. <code>pip</code> <a href="https://pip.pypa.io/en/stable/cli/pip_install/#hash-checking-mode">has a built-in functionality</a> to double check if the hashes you have listed for a dependency matches the hash of a new download. However, <a href="https://github.com/pypa/pip/issues/4732">this open github issue</a> is a good example on how this process can be cumbersome if all you use is <code>pip</code>.</p>
+<p>Luckily there are good dependency managers <em>besides</em> bare <code>pip</code> that we can use with Python. Tools like <code>pipenv</code> and <code>pip-tools</code> will work on top of <code>pip</code>, adding lots of functionality (like a better workflow for lockfiles), others like <code>poetry</code> will disregard <code>pip</code> completely and re-create the whole dependency management system from the ground up. They all have pro and cons for specific functionalities, and it should be up to you to decide which one you want to use.</p>
+<p>Personally, I&rsquo;ve started using <code>poetry</code> a while ago, but dropped it in favor of <code>pipenv</code> after I had issues with <code>poetry</code> and private package feeds, but you should use whatever works for you. As long as you have proper dependency resolution and lockfiles with hashes, you&rsquo;ll be a in a better spot.</p>
+<h2 id="private-feeds">Private Feeds</h2>
+<p>Let&rsquo;s say you have a good dependency management system in place, lockfiles, hashes, good dependency resolution, the whole thing. If you&rsquo;re reading from PyPi directly, what happens when a package you want is deleted? What if the version you need to build your production image gets hijacked? And what happens if PyPi goes down? Well, you&rsquo;re doomed&hellip; if you&rsquo;re not using a <em>private feeds</em> for your packages.</p>
+<p>The idea here is that you want to have better control over which versions are available to internal processes in your company, relying on a paid service with a proper SLA<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. Internal feeds have a simple workflow: instead of hitting a public feeds like PyPi when you do <code>pip install</code>, you configure your package manager to go a internal private feed instead. If the internal feed doesn&rsquo;t have the version of a package you&rsquo;re looking for, it goes to the public feed, downloads a copy and stores it in your company&rsquo;s internal artifact repository. From them on, the next download <em>won&rsquo;t</em> hit the public feed anymore, only the internal one. It&rsquo;s a good practice to not rely on public package repositories for company products, and most organizations will have some sort of private feed configured internally.</p>
+<p>Another major advantage of private feeds is the ability to <em>share internal libraries</em> without disrupting the developer&rsquo;s workflow. So if you have <code>companyname-utils</code> package, you can publish that to your private feed and tell other developers to install them using their package managers (i.e. <code>poetry add companyname-utils</code>). You can also control which teams have access to which packages, something that can be useful depending on how large is your company and the types of projects you have.</p>
+<p>To get more familiar with private feeds, I advise you to take a look at <a href="https://azure.microsoft.com/en-us/services/devops/artifacts/">Azure Artifacts</a> or <a href="https://aws.amazon.com/codeartifact/">AWS CodeArtifact</a>. There are other vendors out there, but you can use those as a base for the kind of functionalities you&rsquo;ll get from those kind of products.</p>
+<p>But one thing to notice here is that even by using a private <strong>you might still be at risk</strong>! As I&rsquo;ve mentioned before, if the package is not in your private feed the first time you try to install it, the system will search for that package in a public repository. What if that public version is infected? And what if a vulnerability is discovered days/months/years after you&rsquo;ve already stored a certain version of a package in your internal repository?</p>
+<h2 id="vulnerability-scans">Vulnerability Scans</h2>
+<p>Tons of newer packages are being published everyday, and keeping mental tabs on which versions are known to be problematic is a job in itself. So how can you, a single developer, add <em>even more</em> protection to you dependency management controls?</p>
+<p>Turns out there are tools out there we can use to <em>scan</em> your dependencies periodically for known security vulnerabilities. The two I&rsquo;ve used before are <a href="https://aws.amazon.com/codeartifact/">Safety</a>, and <a href="https://dependabot.com/">DependaBot</a> (through it&rsquo;s Github integration).</p>
+<p>Safety is nice because it&rsquo;s a simple CLI tool that you run against your local environment. It will raise in case of any know vulnerabilities for the current installed packages. You can also use Safety inside your build pipelines, making a successful safety scan another requirement for pipelines to pass. <code>pipenv</code> <a href="https://pipenv-fork.readthedocs.io/en/latest/advanced.html#detection-of-security-vulnerabilities">ships with <code>safety</code></a>, but it&rsquo;s important to mention that Safety is free only for Open Source projects. If you want to use that within your company, you need to sign up for an API key.</p>
+<p>DependaBot is cool if you use Github for code versioning, as it will do almost all of the work for you. DependaBot will periodically scan the list of dependencies you&rsquo;ve listed inside your projects, and warn you about potential vulnerabilities. It even creates the Pull Request automatically! Sound like it&rsquo;s <em>too good to be true</em>, but I&rsquo;m using DependaBot privately at the moment and it works like a charm. The only downside is that (as far as I know) configuring DependaBot outside of Github can be a bit time-consuming, and you might want to divert efforts towards implementing something like Safety or <a href="https://pyup.io/">PyUp</a>.</p>
+<h2 id="testing-against-multiple-python-versions">Testing Against Multiple Python Versions</h2>
+<p>This step is a bit broad and not only tied to dependency management, but I had luck finding dependency issues through this method <strong>before</strong> they became a real headache.</p>
+<p>When you work on a certain library, normally you&rsquo;ll use a base python version for coding, but consumers of your library might be using <em>different</em> python versions. You might have noticed that every package inside PyPi has a <a href="https://pypi.org/project/pandas/#files">&ldquo;Download Files&rdquo; page</a> in the left side menu, which might list wheels that were made for specific Python/OS versions. If you work mainly with a certain python, how can you know that the underlying dependencies that were built for <em>other versions</em> won&rsquo;t explode?</p>
+<p>My last recommendation for today will be a tool called <a href="https://tox.readthedocs.io/en/latest/">Tox</a>. Tox will automate the creation of virtual environments for specific python versions and let you install your project <em>on each of them</em> to run tests. If you have a comprehensive test suit, this should give you confidence that your package won&rsquo;t break for the python versions you want to support. Their <a href="https://tox.readthedocs.io/en/latest/#basic-example">basic example</a> speaks by itself:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># content of: tox.ini , put in same dir as setup.py</span>
+[tox]
+envlist <span style="color:#f92672">=</span> py27,py36, py38, py39
+
+[testenv]
+<span style="color:#75715e"># install pytest in the virtualenv where commands will be executed</span>
+deps <span style="color:#f92672">=</span> pytest
+commands <span style="color:#f92672">=</span>
+    <span style="color:#75715e"># NOTE: you can run any command line tool here - not just tests</span>
+    pytest
+</code></pre></div><p>This is useful for dependency management in the sense that you might decide to <em>not</em> use the lockfile you&rsquo;ve been using for development, and let the Tox environment resolve the tree again, simulating a user installing your package in their own projects. Over time this might break, anticipating issues that a new user would face on a certain python version. If you&rsquo;ve followed the other advices in this guide, this is unlikely to happen, but it won&rsquo;t hurt to exercise this on top of your regular tests for each individual python version.</p>
+<p>Now I know this step might sound a bit too &ldquo;mystic&rdquo; for the uninitiated, so it&rsquo;s ok if you can&rsquo;t clearly see any value from this right now. Just keep in mind that there are <strong>ways to be ahead of the game</strong>, and try to prevent issues your users might face while installing your code due to problems with an underlying dependency that you <em>did not</em> create directly.</p>
+<h2 id="review">Review</h2>
+<pre><code>- Underlying dependencies can create lots of problems if not taken into account
+- What you put inside your `setup.py` (or similar) matters!
+- Use proper dependency resolution whenever you can (preferably from the start of a project)
+- Lockfiles are a must if you want proper dependency management
+- Private feeds will build more trust in your system
+- Periodical vulnerability scans for dependencies will help you against know issues
+- Testing dependencies against multiple python versions can help with anticipating bug reports from users
+</code></pre><p>Phew, this was a lot! I&rsquo;ve learned all of this the hard way, hitting walls due to bad dependency management and having to find alternatives to improve the practice. It&rsquo;s also funny how some of the younger developers won&rsquo;t grasp how complicated dependency management can be once you have all the proper systems in place.</p>
+<p>But, at the end of the day, I guess this is what we always strive for in software development: building systems that can take care of themselves, without relying on manual intervention. Even so, personally I think that knowing the <em>whys</em> is something imperative towards becoming a better developer. Hopefully this post helped to demystify some of the magic that happen behind the scenes when you&rsquo;re aiming to proper handle dependency management.</p>
+<p>Don&rsquo;t hesitate to reach out directly through github in case you see areas where I can improve. Thank you a lot for reading and I&rsquo;ll see you in the next one!</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><a href="https://www.youtube.com/watch?v=j8iXO5VErjw">This PyCon US 2021</a> talk explain what&rsquo;s coming down the pipe way better than I could. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>In the past there were <a href="https://packaging.python.org/discussions/wheel-vs-egg/">eggs</a>, but wheels are more broadly available today. You might also notice some <code>.tar.gz</code> files inside PyPi, meaning you&rsquo;re building directly for source, and not a wheel targeting an specific python / os version. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>I&rsquo;m not going to pretend I know a lot about those specific dependency resolution algorithms, but here&rsquo;s a thorough description on how never versions of <code>pip</code> are dealing with the issue: <a href="https://pip.pypa.io/en/stable/user_guide/#changes-to-the-pip-dependency-resolver-in-20-3-2020">https://pip.pypa.io/en/stable/user_guide/#changes-to-the-pip-dependency-resolver-in-20-3-2020</a>. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p><a href="https://en.wikipedia.org/wiki/Service-level_agreement">Service Level Agreement</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+                </div>          
+                <div class="divider"></div>
+                <div class="columns is-vcentered">
+                    <div class="column related-posts">
+                        <h1 class="title is-5">Related Posts</h1>
+                        
+                        
+                        <li><a href="/posts/002-customizing-the-python-debugger/">Customizing the Python Debugger</a></li>
+                        
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="columns is-vcentered">
+                    <div class="column categories">
+                        <h2 class="title is-5">Categories</h2>
+                        
+                        <a href="/categories/python">Python</a>, 
+                        <a href="/categories/technical">Technical</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </article>
+</section>
+
+        </main><footer class="footer bg-color flex-item-width">
+    <div class="container">
+        <div class="columns has-text-centered">            
+            <div class="column is-narrow">
+                <i class='fa fa-coffee' aria-hidden='true'></i> Made with <a target='_blank' href='https://gohugo.io/'>hugo</a>. Click <a target='_blank' href='https://github.com/maurcz/site'>here</a> for source code.
+            </div>            
+        </div>
+    </div>
+</footer></body>
+</html>
