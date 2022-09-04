@@ -119,78 +119,78 @@ if (!doNotTrack) {
 <p>There are <a href="https://themes.goHugo.io/">plenty of themes</a> available. A piece of advice if you&rsquo;re testing out lots of free themes: some of them require <em>very</em> specific things in your site&rsquo;s <code>config.toml</code> file. Make sure to double check if you&rsquo;re following the theme dev&rsquo;s guidelines for configuration, before moving on to a theme &ldquo;that works&rdquo;.</p>
 <p>Most themes I tried still felt like too much for what I wanted, so I decided to go and create my own. <a href="https://www.pakstech.com/blog/create-Hugo-theme/">This guide</a> by Janne Kemppainen was extremely helpful. Basically, I used his examples as base taking <em>all</em> the &ldquo;clutter&rdquo; out of the way.</p>
 <p>Only two folders live inside <code>content</code>:</p>
-<pre><code>&gt; about
+<pre tabindex="0"><code>&gt; about
   - index.md
 &gt; posts
   - 001-....md
   - 002-....md
 </code></pre><p>The numbers in front of the posts are not a theme hard requirement, just something I decided to use to keep things organized. Plus, I can semantically tie images to posts, like <code>/images/001/whatever.png</code>.</p>
 <p>My <code>index.html</code> is basically the list of posts + a simpler version of the <code>pagination</code> widget from Janne&rsquo;s post:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ $pag := $.Paginator }}
-{{ if gt $pag.TotalPages 1 }}
-&lt;<span style="color:#f92672">nav</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination is-small is-rounded&#34;</span>&gt;
-&lt;<span style="color:#f92672">ul</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-list&#34;</span>&gt;
-    {{ with $pag.First }}
-    &lt;<span style="color:#f92672">li</span>&gt;
-        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .URL }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasPrev</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;First&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;laquo;&amp;laquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
-    &lt;/<span style="color:#f92672">li</span>&gt;
-    {{ end }}
-    &lt;<span style="color:#f92672">li</span>&gt;
-        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ if $pag.HasPrev }}{{ $pag.Prev.URL }}{{ end }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasPrev</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Previous&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;laquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
-    &lt;/<span style="color:#f92672">li</span>&gt;
-    
-    {{ range $pag.Pagers }}
-    {{ end }}
-    &lt;<span style="color:#f92672">li</span>&gt;
-    &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ if $pag.HasNext }}{{ $pag.Next.URL }}{{ end }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasNext</span> <span style="color:#960050;background-color:#1e0010">}}</span><span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Next&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;raquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
-    &lt;/<span style="color:#f92672">li</span>&gt;
-    {{ with $pag.Last }}
-    &lt;<span style="color:#f92672">li</span>&gt;
-        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .URL }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasNext</span> <span style="color:#960050;background-color:#1e0010">}}</span><span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Last&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;raquo;&amp;raquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
-    &lt;/<span style="color:#f92672">li</span>&gt;
-    {{ end }}
-&lt;/<span style="color:#f92672">ul</span>&gt;
-&lt;/<span style="color:#f92672">nav</span>&gt;
-{{ end }}
-</code></pre></div><p>That code will render:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ $pag := $.Paginator }}
+</span></span><span style="display:flex;"><span>{{ if gt $pag.TotalPages 1 }}
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">nav</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination is-small is-rounded&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">ul</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-list&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    {{ with $pag.First }}
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">li</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .URL }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasPrev</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;First&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;laquo;&amp;laquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">li</span>&gt;
+</span></span><span style="display:flex;"><span>    {{ end }}
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">li</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ if $pag.HasPrev }}{{ $pag.Prev.URL }}{{ end }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasPrev</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Previous&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;laquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">li</span>&gt;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    {{ range $pag.Pagers }}
+</span></span><span style="display:flex;"><span>    {{ end }}
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">li</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ if $pag.HasNext }}{{ $pag.Next.URL }}{{ end }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasNext</span> <span style="color:#960050;background-color:#1e0010">}}</span><span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Next&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;raquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">li</span>&gt;
+</span></span><span style="display:flex;"><span>    {{ with $pag.Last }}
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">li</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .URL }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pagination-link&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">if</span> <span style="color:#a6e22e">not</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pag</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">HasNext</span> <span style="color:#960050;background-color:#1e0010">}}</span><span style="color:#a6e22e">disabled</span><span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">end</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">aria-label</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Last&#34;</span>&gt;&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">aria-hidden</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;true&#34;</span>&gt;&amp;raquo;&amp;raquo;&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">li</span>&gt;
+</span></span><span style="display:flex;"><span>    {{ end }}
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">ul</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">nav</span>&gt;
+</span></span><span style="display:flex;"><span>{{ end }}
+</span></span></code></pre></div><p>That code will render:</p>
 <p><img src="/images/001/pagination.png" alt="pagination"></p>
 <p>In my version, there are no numbers for pages, just simple controls to skip to next/prev or first/last. The new CSS classes come straight from <a href="https://bulma.io/">Bulma</a> (also recommended by Janne). Think of it as a lighter version of Bootstrap, kinda like what <a href="https://purecss.io/">PureCSS</a> does. I&rsquo;m not well versed on all the hidden mysteries of CSS, so any open source CSS framework that&rsquo;s modular and simple to use works for me.</p>
 <p>Here&rsquo;s my override to <code>theme/folder/index.html</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ define &#34;main&#34; }}
-&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
-    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;section&#34;</span>&gt;
-        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
-            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-content-width&#34;</span>&gt;
-                &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;content&#34;</span>&gt;
-                    {{ .Content }}
-                    {{ $paginator := .Paginate (where site.RegularPages &#34;Type&#34; &#34;in&#34; site.Params.mainSections) }}
-                    {{ range .Paginator.Pages }}
-                    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
-                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;title is-5&#34;</span>&gt;
-                            &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .Permalink }}&#34;</span>&gt;{{ .Title }}&lt;/<span style="color:#f92672">a</span>&gt;
-                        &lt;/<span style="color:#f92672">div</span>&gt;
-                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;subtitle is-7&#34;</span>&gt;
-                            &lt;<span style="color:#f92672">time</span>&gt;{{ .PublishDate.Format &#34;January 2, 2006&#34;}}&lt;/<span style="color:#f92672">time</span>&gt;
-                            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;summary&#34;</span>&gt;
-                            {{ .Summary }}
-                            &lt;/<span style="color:#f92672">div</span>&gt;
-                        &lt;/<span style="color:#f92672">div</span>&gt;
-                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;subtitle&#34;</span>&gt;
-                        &lt;/<span style="color:#f92672">div</span>&gt;
-                    &lt;/<span style="color:#f92672">div</span>&gt;
-                    {{ end }}
-                &lt;/<span style="color:#f92672">div</span>&gt;
-            &lt;/<span style="color:#f92672">div</span>&gt;
-        &lt;/<span style="color:#f92672">div</span>&gt;
-        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
-            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-content-width&#34;</span>&gt;
-                {{ partial &#34;widgets/pagination.html&#34; . }}
-            &lt;/<span style="color:#f92672">div</span>&gt;
-        &lt;/<span style="color:#f92672">div</span>&gt;
-    &lt;/<span style="color:#f92672">div</span>&gt;    
-&lt;/<span style="color:#f92672">div</span>&gt;
-{{ end }}
-</code></pre></div><p>Just a simple list of <em>posts</em> (notice the rules for <code>$paginator</code>), with title, date and summary. Bulma&rsquo;s <a href="https://bulma.io/documentation/columns/basics/">column</a> ensure a modular and responsive layout, giving me that feeling that I&rsquo;m back into using <code>&lt;tr&gt;&lt;td&gt;</code>s for everything in Dreamweaver (I really wished I had a way to find the first ever Quake website I made).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ define &#34;main&#34; }}
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;section&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-content-width&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;content&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                    {{ .Content }}
+</span></span><span style="display:flex;"><span>                    {{ $paginator := .Paginate (where site.RegularPages &#34;Type&#34; &#34;in&#34; site.Params.mainSections) }}
+</span></span><span style="display:flex;"><span>                    {{ range .Paginator.Pages }}
+</span></span><span style="display:flex;"><span>                    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;title is-5&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                            &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .Permalink }}&#34;</span>&gt;{{ .Title }}&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span>                        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;subtitle is-7&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                            &lt;<span style="color:#f92672">time</span>&gt;{{ .PublishDate.Format &#34;January 2, 2006&#34;}}&lt;/<span style="color:#f92672">time</span>&gt;
+</span></span><span style="display:flex;"><span>                            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;summary&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                            {{ .Summary }}
+</span></span><span style="display:flex;"><span>                            &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>                        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>                        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;subtitle&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>                    &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>                    {{ end }}
+</span></span><span style="display:flex;"><span>                &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;columns is-centered&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;column max-content-width&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                {{ partial &#34;widgets/pagination.html&#34; . }}
+</span></span><span style="display:flex;"><span>            &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">div</span>&gt;    
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>{{ end }}
+</span></span></code></pre></div><p>Just a simple list of <em>posts</em> (notice the rules for <code>$paginator</code>), with title, date and summary. Bulma&rsquo;s <a href="https://bulma.io/documentation/columns/basics/">column</a> ensure a modular and responsive layout, giving me that feeling that I&rsquo;m back into using <code>&lt;tr&gt;&lt;td&gt;</code>s for everything in Dreamweaver (I really wished I had a way to find the first ever Quake website I made).</p>
 <p>I&rsquo;ve added <a href="https://fontawesome.com/icons?d=gallery&amp;m=free">fontawesome</a> to the theme, which is where those social icons up there are coming from, and the free font <a href="https://fonts.google.com/specimen/Merriweather">Merriweather</a> by Google. <a href="https://jquery.com/">JQuery</a> is only used to deal with the &ldquo;burguer&rdquo; icon that appears when you access the website using smaller screens. Aside from some minor CSS tweaks and overrides, that&rsquo;s pretty much it.</p>
 <p>All that was left was to host the site somewhere.</p>
 <h2 id="github-pages">Github Pages</h2>
@@ -201,17 +201,17 @@ if (!doNotTrack) {
 <h2 id="what-now">What now?</h2>
 <p>Well, I guess now I&rsquo;m finally back into writing. It&rsquo;s been a while (last time I wrote for a blog <a href="https://www.abapzombie.com/mundo-sap/2017/05/31/exite-vida-apos-o-abap/">was in 2017</a>), and I definitely missed it. Hopefully this will serve as a platform to improve not only my tech, but also english writing skills.</p>
 <p>Thanks for reading, and I see you in the next one!</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>I have no data to back up this claim, but I encourage you to try and ask any non-SAP dev you know that had to touch anything ABAP-related. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>I have no data to back up this claim, but I encourage you to try and ask any non-SAP dev you know that had to touch anything ABAP-related.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>This happened to me once. And again with other plugins. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>This happened to me once. And again with other plugins.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
                 </div>          
                 <div class="divider"></div>

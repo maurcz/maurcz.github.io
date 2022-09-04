@@ -116,195 +116,195 @@ if (!doNotTrack) {
 <p>What&rsquo;s interesting about the <code>Pdb</code> class is that it implements two other classes <code>Bdb</code> and <code>Cmd</code> (as if we didn&rsquo;t already have enough acronyms). <a href="https://docs.python.org/3/library/bdb.html#module-bdb">Bdb</a> is python&rsquo;s debugger framework that provides basic capabilities like setting breakpoints; <a href="https://docs.python.org/3/library/cmd.html#module-cmd">Cmd</a> is a framework for writing line-oriented command interpreters. This means you don&rsquo;t necessarily need to inherit from <code>Pdb</code> if you want to create your custom debugger - you can do all the heavy lifting yourself using <code>Bdb</code> and <code>Cmd</code>. This is not the aim of this post though, we&rsquo;ll just extend <code>Pdb</code>&rsquo;s functionalities into our own tiny custom debugger module.</p>
 <h2 id="overriding-the-prompt">Overriding the prompt</h2>
 <p>Let&rsquo;s start with a very simple example: overriding the default <code>(Pdb)</code> prompt. We&rsquo;ll need two new python files: <code>dummy.py</code>, a dummy script for breakpoints and <code>debug.py</code>, which will host our new debugger. Here are the contents of my <code>dummy.py</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
-
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_the_things</span>(number: int, text: str, big_list: list):
-    <span style="color:#f92672">import</span> pdb; pdb<span style="color:#f92672">.</span>set_trace()
-
-    <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;Number: {number}, Text: {text}, List: {big_list}&#34;</span>)
-
-
-print_the_things(
-    number<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>,
-    text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Blame and lies, contradictions arise&#34;</span>,
-    big_list<span style="color:#f92672">=</span>[random() <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100000</span>)]
-)
-</code></pre></div><p>We&rsquo;ll hit the breakpoint only once as soon as we enter the function. This is the prompt I&rsquo;m getting:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_the_things</span>(number: int, text: str, big_list: list):
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">import</span> pdb; pdb<span style="color:#f92672">.</span>set_trace()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Number: </span><span style="color:#e6db74">{</span>number<span style="color:#e6db74">}</span><span style="color:#e6db74">, Text: </span><span style="color:#e6db74">{</span>text<span style="color:#e6db74">}</span><span style="color:#e6db74">, List: </span><span style="color:#e6db74">{</span>big_list<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print_the_things(
+</span></span><span style="display:flex;"><span>    number<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>    text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Blame and lies, contradictions arise&#34;</span>,
+</span></span><span style="display:flex;"><span>    big_list<span style="color:#f92672">=</span>[random() <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100000</span>)]
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>We&rsquo;ll hit the breakpoint only once as soon as we enter the function. This is the prompt I&rsquo;m getting:</p>
 <p><img src="/images/002/pdb-prompt.png" alt="pdb-prompt"></p>
 <p>To customize the prompt, we&rsquo;ll need to create a <em>new</em> class that inherits <code>Pdb</code> and changes one of the inherited properties during initialization. Here&rsquo;s the code of <code>debug.py</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> pdb
-<span style="color:#f92672">import</span> sys
-
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Debug</span>(pdb<span style="color:#f92672">.</span>Pdb):
-    <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
-        super(Debug, self)<span style="color:#f92672">.</span>__init__(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
-        self<span style="color:#f92672">.</span>prompt <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;[extended-pdb] &#34;</span>
-
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop</span>():
-    debugger <span style="color:#f92672">=</span> Debug()
-    debugger<span style="color:#f92672">.</span>set_trace(sys<span style="color:#f92672">.</span>_getframe()<span style="color:#f92672">.</span>f_back)
-</code></pre></div><p>What&rsquo;s going on with that code?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pdb
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Debug</span>(pdb<span style="color:#f92672">.</span>Pdb):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        super(Debug, self)<span style="color:#f92672">.</span>__init__(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>prompt <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;[extended-pdb] &#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop</span>():
+</span></span><span style="display:flex;"><span>    debugger <span style="color:#f92672">=</span> Debug()
+</span></span><span style="display:flex;"><span>    debugger<span style="color:#f92672">.</span>set_trace(sys<span style="color:#f92672">.</span>_getframe()<span style="color:#f92672">.</span>f_back)
+</span></span></code></pre></div><p>What&rsquo;s going on with that code?</p>
 <ul>
 <li>The <code>__init__</code> function will call <code>Pdb</code>&rsquo;s initializer through <code>super()</code>. We must do this <em>before</em> our prompt customization, as <code>Pdb</code> initializes <code>self.prompt</code> with <code>'(Pdb) '</code> (<a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L142">source</a>)</li>
 <li>A line setting <code>self.prompt</code> to whatever we want</li>
 <li><code>stop()</code> is a simplified interface to our custom debugger, analogous to <code>pdb.set_trace()</code>.</li>
 </ul>
 <p>Now we need to import our <em>custom</em> debugger inside <code>dummy.py</code>, calling our <em>custom</em> breakpoint function. Here&rsquo;s the modified code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
-
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_the_things</span>(number: int, text: str, big_list: list):
-    <span style="color:#f92672">import</span> debug; debug<span style="color:#f92672">.</span>stop()  <span style="color:#75715e"># custom breakpoint</span>
-
-    <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;Number: {number}, Text: {text}, List: {big_list}&#34;</span>)
-
-
-print_the_things(
-    number<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>,
-    text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Blame and lies, contradictions arise&#34;</span>,
-    big_list<span style="color:#f92672">=</span>[random() <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100000</span>)]
-)
-</code></pre></div><p>Now if we run our dummy script&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_the_things</span>(number: int, text: str, big_list: list):
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">import</span> debug; debug<span style="color:#f92672">.</span>stop()  <span style="color:#75715e"># custom breakpoint</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Number: </span><span style="color:#e6db74">{</span>number<span style="color:#e6db74">}</span><span style="color:#e6db74">, Text: </span><span style="color:#e6db74">{</span>text<span style="color:#e6db74">}</span><span style="color:#e6db74">, List: </span><span style="color:#e6db74">{</span>big_list<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print_the_things(
+</span></span><span style="display:flex;"><span>    number<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>    text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Blame and lies, contradictions arise&#34;</span>,
+</span></span><span style="display:flex;"><span>    big_list<span style="color:#f92672">=</span>[random() <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100000</span>)]
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>Now if we run our dummy script&hellip;</p>
 <p><img src="/images/002/pdb-prompt-modified.png" alt="pdb-prompt-modified"></p>
 <p>&hellip; we get a custom prompt! What&rsquo;s cool about this structure is that this custom debugger will retain <em>all</em> of pdb&rsquo;s capabilities. You&rsquo;ll still have <code>n</code>, <code>s</code>, <code>r</code> and everything else.</p>
 <h2 id="building-a-custom-command">Building a custom command</h2>
 <p>Now that we got the basic structure going, we can push a bit more by creating a new command to our custom debugger.</p>
 <p>Earlier I&rsquo;ve mentioned that <code>Pdb</code> is built on top of other two classes, one of them being <code>Cmd</code>. This class dictates how commands should be implemented to be recognized when an user enters the command on a debugging session. The structure is pretty simple: if your debugger class inherits <code>Cmd</code> and has a <code>do_something</code> method, <code>something</code> becomes a new command you can use in the debugger. Since we&rsquo;re extending <code>Pdb</code>, which in turn implements <code>Cmd</code>, we&rsquo;ll also have to follow the name convention.</p>
 <p>For reference, <a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1253">this link</a> shows how <code>Pdb</code> implements the long list command. Notice how it has a &ldquo;shortcut&rdquo; for long list called <code>ll</code>, created by referencing the original method: <code>do_ll = do_longlist</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Code from https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1265, added here for reference only.</span>
-<span style="color:#75715e"># Copied on May/2021 - currently implementation might be different.</span>
-
-(<span style="color:#f92672">...</span>)
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">do_longlist</span>(self, arg):
-    <span style="color:#e6db74">&#34;&#34;&#34;longlist | ll
-</span><span style="color:#e6db74">    List the whole source code for the current function or frame.
-</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-    filename <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe<span style="color:#f92672">.</span>f_code<span style="color:#f92672">.</span>co_filename
-    breaklist <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_file_breaks(filename)
-    <span style="color:#66d9ef">try</span>:
-        lines, lineno <span style="color:#f92672">=</span> getsourcelines(self<span style="color:#f92672">.</span>curframe)
-    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">OSError</span> <span style="color:#66d9ef">as</span> err:
-        self<span style="color:#f92672">.</span>error(err)
-        <span style="color:#66d9ef">return</span>
-    self<span style="color:#f92672">.</span>_print_lines(lines, lineno, breaklist, self<span style="color:#f92672">.</span>curframe)
-do_ll <span style="color:#f92672">=</span> do_longlist
-
-
-(<span style="color:#f92672">...</span>)
-</code></pre></div><p>The name of our custom command will be <code>args_memory_usage</code>, and the intent is to print inside the debugging session how much memory the args of the current function are consuming. The <code>sys</code> module has a function called <code>getsizeof</code> that could have been used for that, but while doing some research, I found that it <a href="https://stackoverflow.com/questions/449560/how-do-i-determine-the-size-of-an-object-in-python">won&rsquo;t really</a> be that precise in all cases. Fortunately, there&rsquo;s a really small dependency we can use for more accurate consumption stats called <a href="https://pypi.org/project/Pympler/">Pympler</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Code from https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1265, added here for reference only.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copied on May/2021 - currently implementation might be different.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">do_longlist</span>(self, arg):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;longlist | ll
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    List the whole source code for the current function or frame.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    filename <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe<span style="color:#f92672">.</span>f_code<span style="color:#f92672">.</span>co_filename
+</span></span><span style="display:flex;"><span>    breaklist <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_file_breaks(filename)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        lines, lineno <span style="color:#f92672">=</span> getsourcelines(self<span style="color:#f92672">.</span>curframe)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">OSError</span> <span style="color:#66d9ef">as</span> err:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>error(err)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>_print_lines(lines, lineno, breaklist, self<span style="color:#f92672">.</span>curframe)
+</span></span><span style="display:flex;"><span>do_ll <span style="color:#f92672">=</span> do_longlist
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#f92672">...</span>)
+</span></span></code></pre></div><p>The name of our custom command will be <code>args_memory_usage</code>, and the intent is to print inside the debugging session how much memory the args of the current function are consuming. The <code>sys</code> module has a function called <code>getsizeof</code> that could have been used for that, but while doing some research, I found that it <a href="https://stackoverflow.com/questions/449560/how-do-i-determine-the-size-of-an-object-in-python">won&rsquo;t really</a> be that precise in all cases. Fortunately, there&rsquo;s a really small dependency we can use for more accurate consumption stats called <a href="https://pypi.org/project/Pympler/">Pympler</a>.</p>
 <p>I also wanted to make sure we&rsquo;re not just throwing bytes numbers at the user by default, as those can be a bit hard to understand for heavy objects. I wrote a pretty basic bytes/kb/mb convertor (I&rsquo;m using 1000 as base and I&rsquo;ll save yourself from all the discussions about 1000 vs 1024, SI, kibibytes, mebibytes and more), which will also be used to show how to pass args to custom commands.</p>
 <p>Here&rsquo;s our revamped <code>debug.py</code>:</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
-<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> inspect
-<span style="color:#f92672">import</span> pdb
-<span style="color:#f92672">import</span> sys
-
-<span style="color:#f92672">from</span> pympler <span style="color:#f92672">import</span> asizeof
-
-
-KNOWN_UNITS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;KB&#34;</span>, <span style="color:#e6db74">&#34;MB&#34;</span>, <span style="color:#e6db74">&#34;BYTES&#34;</span>}
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Debug</span>(pdb<span style="color:#f92672">.</span>Pdb):
-    <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
-        super(Debug, self)<span style="color:#f92672">.</span>__init__(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
-        self<span style="color:#f92672">.</span>prompt <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;[extended-pdb] &#34;</span>
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">format_bytes</span>(self, value: int, unit: str) <span style="color:#f92672">-&gt;</span> str:
-        upper <span style="color:#f92672">=</span> unit<span style="color:#f92672">.</span>upper()
-
-        <span style="color:#75715e"># Forcing BYTES for unknown units</span>
-        base_unit <span style="color:#f92672">=</span> upper <span style="color:#66d9ef">if</span> upper <span style="color:#f92672">in</span> KNOWN_UNITS <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;BYTES&#34;</span>
-
-        <span style="color:#66d9ef">if</span> base_unit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;KB&#34;</span>:
-            converted <span style="color:#f92672">=</span> value <span style="color:#f92672">/</span> <span style="color:#ae81ff">1000</span>
-        <span style="color:#66d9ef">elif</span> base_unit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;MB&#34;</span>:
-            converted <span style="color:#f92672">=</span> value <span style="color:#f92672">/</span> <span style="color:#ae81ff">1000000</span>
-        <span style="color:#66d9ef">else</span>:
-            converted <span style="color:#f92672">=</span> value
-
-        <span style="color:#66d9ef">return</span> f<span style="color:#e6db74">&#34;{converted:.2f} {base_unit}&#34;</span>
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">do_args_memory_usage</span>(self, arg: str):
-        co <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe<span style="color:#f92672">.</span>f_code
-        dict <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe_locals
-        n <span style="color:#f92672">=</span> co<span style="color:#f92672">.</span>co_argcount <span style="color:#f92672">+</span> co<span style="color:#f92672">.</span>co_kwonlyargcount
-        <span style="color:#66d9ef">if</span> co<span style="color:#f92672">.</span>co_flags <span style="color:#f92672">&amp;</span> inspect<span style="color:#f92672">.</span>CO_VARARGS: n <span style="color:#f92672">=</span> n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
-        <span style="color:#66d9ef">if</span> co<span style="color:#f92672">.</span>co_flags <span style="color:#f92672">&amp;</span> inspect<span style="color:#f92672">.</span>CO_VARKEYWORDS: n <span style="color:#f92672">=</span> n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
-
-        self<span style="color:#f92672">.</span>message(<span style="color:#e6db74">&#34;---- Args memory usage ----&#34;</span>)
-        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n):
-            name <span style="color:#f92672">=</span> co<span style="color:#f92672">.</span>co_varnames[i]
-            <span style="color:#66d9ef">if</span> name <span style="color:#f92672">in</span> dict:
-                arg_size <span style="color:#f92672">=</span> asizeof<span style="color:#f92672">.</span>asizeof(dict[name])
-                self<span style="color:#f92672">.</span>message(<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> = </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (name, self<span style="color:#f92672">.</span>format_bytes(arg_size, arg)))
-            <span style="color:#66d9ef">else</span>:
-                self<span style="color:#f92672">.</span>message(<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> = *** undefined ***&#39;</span> <span style="color:#f92672">%</span> (name,))
-
-    do_amu <span style="color:#f92672">=</span> do_args_memory_usage
-
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop</span>():
-    debugger <span style="color:#f92672">=</span> Debug()
-    debugger<span style="color:#f92672">.</span>set_trace(sys<span style="color:#f92672">.</span>_getframe()<span style="color:#f92672">.</span>f_back)
-</code></pre></td></tr></table>
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> inspect
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pdb
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pympler <span style="color:#f92672">import</span> asizeof
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>KNOWN_UNITS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;KB&#34;</span>, <span style="color:#e6db74">&#34;MB&#34;</span>, <span style="color:#e6db74">&#34;BYTES&#34;</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Debug</span>(pdb<span style="color:#f92672">.</span>Pdb):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        super(Debug, self)<span style="color:#f92672">.</span>__init__(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>prompt <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;[extended-pdb] &#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">format_bytes</span>(self, value: int, unit: str) <span style="color:#f92672">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>        upper <span style="color:#f92672">=</span> unit<span style="color:#f92672">.</span>upper()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Forcing BYTES for unknown units</span>
+</span></span><span style="display:flex;"><span>        base_unit <span style="color:#f92672">=</span> upper <span style="color:#66d9ef">if</span> upper <span style="color:#f92672">in</span> KNOWN_UNITS <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;BYTES&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> base_unit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;KB&#34;</span>:
+</span></span><span style="display:flex;"><span>            converted <span style="color:#f92672">=</span> value <span style="color:#f92672">/</span> <span style="color:#ae81ff">1000</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> base_unit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;MB&#34;</span>:
+</span></span><span style="display:flex;"><span>            converted <span style="color:#f92672">=</span> value <span style="color:#f92672">/</span> <span style="color:#ae81ff">1000000</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            converted <span style="color:#f92672">=</span> value
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>converted<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>base_unit<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">do_args_memory_usage</span>(self, arg: str):
+</span></span><span style="display:flex;"><span>        co <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe<span style="color:#f92672">.</span>f_code
+</span></span><span style="display:flex;"><span>        dict <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curframe_locals
+</span></span><span style="display:flex;"><span>        n <span style="color:#f92672">=</span> co<span style="color:#f92672">.</span>co_argcount <span style="color:#f92672">+</span> co<span style="color:#f92672">.</span>co_kwonlyargcount
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> co<span style="color:#f92672">.</span>co_flags <span style="color:#f92672">&amp;</span> inspect<span style="color:#f92672">.</span>CO_VARARGS: n <span style="color:#f92672">=</span> n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> co<span style="color:#f92672">.</span>co_flags <span style="color:#f92672">&amp;</span> inspect<span style="color:#f92672">.</span>CO_VARKEYWORDS: n <span style="color:#f92672">=</span> n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>message(<span style="color:#e6db74">&#34;---- Args memory usage ----&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n):
+</span></span><span style="display:flex;"><span>            name <span style="color:#f92672">=</span> co<span style="color:#f92672">.</span>co_varnames[i]
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> name <span style="color:#f92672">in</span> dict:
+</span></span><span style="display:flex;"><span>                arg_size <span style="color:#f92672">=</span> asizeof<span style="color:#f92672">.</span>asizeof(dict[name])
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>message(<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> = </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (name, self<span style="color:#f92672">.</span>format_bytes(arg_size, arg)))
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>message(<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> = *** undefined ***&#39;</span> <span style="color:#f92672">%</span> (name,))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    do_amu <span style="color:#f92672">=</span> do_args_memory_usage
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop</span>():
+</span></span><span style="display:flex;"><span>    debugger <span style="color:#f92672">=</span> Debug()
+</span></span><span style="display:flex;"><span>    debugger<span style="color:#f92672">.</span>set_trace(sys<span style="color:#f92672">.</span>_getframe()<span style="color:#f92672">.</span>f_back)
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Where did all that code inside <code>do_args_memory_usage</code> come from?</p>
 <p>Well, <code>pdb</code> already has a pretty good <a href="https://github.com/python/cpython/blob/3.8/Lib/pdb.py#L1134">implementation</a> for a command that will print all the args of the current function (<code>a</code>). It gets the function args according to the current state of the debugger and prints them one by one. The <code>arg</code> parameter from <code>do_args_memory_usage</code> is the string that&rsquo;s entered <em>after</em> the command inside the debugging session (e.g. for <code>amu mb</code>, <code>arg</code> would be <code>mb</code>).</p>
@@ -336,6 +336,8 @@ KNOWN_UNITS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#
                         
                         
                         <li><a href="/posts/003-python-dependency-management/">Python Dependency Management</a></li>
+                        
+                        <li><a href="/posts/004-people-over-systems/">People Over Systems</a></li>
                         
                         <li><a href="/posts/001-building-a-blog-in-2020/">Building a personal dev blog in 2020</a></li>
                         
