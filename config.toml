@@ -1,0 +1,53 @@
+baseURL = "https://maurcz.github.io/"
+languageCode = "en-us"
+title = "Mauricio R. Cruz"
+theme = "maurcz-blog"
+enableRobotsTXT = true
+summaryLength = 2
+paginate = 10
+
+[params]
+    googleAnalyticsID = "G-B56J34MFX1"
+    author = "Mauricio R. Cruz"
+    footerMsg = "<i class='fa fa-coffee' aria-hidden='true'></i> Made with <a target='_blank' href='https://gohugo.io/'>hugo</a>. Click <a target='_blank' href='https://github.com/maurcz/site'>here</a> for source code."
+
+[[menu.main]]
+  name = "About"
+  url = "/about"
+
+[[menu.main]]
+  name = "Posts"
+  url = "/"
+
+[[menu.social]]
+  name = "Youtube"
+  url = "https://www.youtube.com/@maurcz"
+  pre = "<i class='fab fa-youtube'></i>"
+
+[[menu.social]]
+  name = "GitHub"
+  url = "https://github.com/maurcz"
+  pre = "<i class='fab fa-github'></i>"
+
+[[menu.social]]
+    name = "LinkedIn"
+    url = "https://www.linkedin.com/in/mauriciorcruz/"
+    pre = "<i class='fab fa-linkedin'></i>"
+
+[[menu.social]]
+    name = "Email"
+    url = "mailto:mauriciorcruz@gmail.com"
+    pre = "<i class='fa fa-envelope'></i>"
+
+[related]
+    threshold = 0
+    includeNewer = true
+    toLower = false
+
+    [[related.indices]]
+        name = "categories"
+        weight = 100
+
+    [[related.indices]]
+        name = "date"
+        weight = 10

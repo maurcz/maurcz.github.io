@@ -1,0 +1,38 @@
+{{ define "main" }}
+<section class="section">
+    <article>
+        <div class="columns is-centered">
+            <div class="column max-content-width">
+                <h2 class="title is-2 highlight-color">{{ .Title }}</h2>
+                <p class="subtitle single-subtitle">
+                    <time>{{ .PublishDate.Format "January 2, 2006" }}</time> | {{ .ReadingTime }}{{ if eq .ReadingTime 1 }} minute {{ else }} minutes {{ end }}
+                </p>
+                <div class="content single-content">
+                    {{ .Content }}
+                </div>          
+                <div class="divider"></div>
+                <div class="columns is-vcentered">
+                    <div class="column related-posts">
+                        <h1 class="title is-5">Related Posts</h1>
+                        {{ $related := (where (.Site.RegularPages.Related .) "Type" "posts") | first 3 }}
+                        {{ range $related }}
+                        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+                        {{ end }}
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="columns is-vcentered">
+                    <div class="column categories">
+                        <h2 class="title is-5">Categories</h2>
+                        {{ range $idx, $category := .Params.categories }}
+                        {{- if ne $idx 0 }}, {{ end }}
+                        <a href="{{ "categories/" | relURL }}{{ $category | urlize }}">{{ $category }}</a>
+                        {{- end }}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </article>
+</section>
+{{ end }}

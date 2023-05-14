@@ -1,0 +1,34 @@
+{{ define "main" }}
+<div class="container">
+    <div class="section">
+        <div class="columns is-centered">
+            <div class="column max-content-width">
+                <div class="content">
+                    {{ .Content }}
+                    {{ $paginator := .Paginate (where site.RegularPages "Type" "in" site.Params.mainSections) }}
+                    {{ range .Paginator.Pages }}
+                    <div class="container">
+                        <div class="title is-5">
+                            <a href="{{ .Permalink }}">{{ .Title }}</a>
+                        </div>
+                        <div class="subtitle is-7">
+                            <time>{{ .PublishDate.Format "January 2, 2006"}}</time>
+                            <div class="summary">
+                            {{ .Summary }}
+                            </div>
+                        </div>
+                        <div class="subtitle">
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+        <div class="columns is-centered">
+            <div class="column max-content-width">
+                {{ partial "widgets/pagination.html" . }}
+            </div>
+        </div>
+    </div>    
+</div>
+{{ end }}

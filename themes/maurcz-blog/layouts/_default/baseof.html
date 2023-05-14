@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}" class="bg-color">
+    {{- partial "head.html" . -}}
+    <body class="flex-box-align-center">
+        {{- partial "header.html" . -}}
+        <main class="flex-item-width">
+        {{- block "main" . }}{{- end }}
+        </main>
+        {{- partial "footer.html" . -}}
+    </body>
+</html>
